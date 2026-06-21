@@ -152,142 +152,154 @@ def generate_stores():
     print(f"  실제 데이터 로드: SKT {len(skt)}개, KT {len(kt)}개, LGU+ {len(lgu)}개")
     return stores
 
-# ─── LAYER 1: DBSCAN 과밀 구역 탐지 ─────────────────────────────────────────
-def layer1_dbscan(stores):
+# ─── 임계값 설정 (의사결정자가 조정 가능) ────────────────────────────────────
+DEFAULT_THRESHOLDS = {
+    # 수익성 렌즈: 월 손익 적자 AND Isolation Forest 이상 탐지
+    "profitability_max_profit_krw": 0,          # 월 손익 기준 (0 = 적자만)
+    "profitability_if_score_max": -0.05,        # anomaly score 상한 (낮을수록 이상)
+
+    # M/S 방어 렌즈: Huff 흡수율 + 인근 SKT 매장 수
+    "ms_min_absorption_rate": 0.70,             # 인근 SKT 매장 흡수율 70% 이상
+    "ms_min_nearby_skt": 2,                     # 반경 2km 내 SKT 매장 최소 수
+
+    # 커버리지 렌즈: 클러스터 내 매장 수
+    "coverage_min_cluster_size": 3,             # 같은 클러스터 내 SKT 매장 3개 이상
+}
+
+# ─── LAYER A: DBSCAN 과밀 구역 탐지 ──────────────────────────────────────────
+def layer_dbscan(stores):
     skt_stores = [s for s in stores if s["carrier"] == "SKT"]
-    coords = np.array([[s["lat"], s["lng"]] for s in skt_stores])
-    coords_rad = np.radians(coords)
+    coords_rad = np.radians([[s["lat"], s["lng"]] for s in skt_stores])
 
-    # eps=0.8km in radians
-    eps_km = 0.8
-    eps_rad = eps_km / 6371.0
-
-    db = DBSCAN(eps=eps_rad, min_samples=2, algorithm='ball_tree', metric='haversine')
-    labels = db.fit_predict(coords_rad)
+    eps_rad = 0.8 / 6371.0
+    labels = DBSCAN(eps=eps_rad, min_samples=2, algorithm='ball_tree', metric='haversine').fit_predict(coords_rad)
 
     clusters = {}
-    for i, (store, label) in enumerate(zip(skt_stores, labels)):
+    for store, label in zip(skt_stores, labels):
         store["dbscan_cluster"] = int(label)
-        store["is_overcrowded"] = label != -1
+        store["dbscan_cluster_size"] = 0
         if label != -1:
-            if label not in clusters:
-                clusters[label] = []
-            clusters[label].append(store["store_id"])
+            clusters.setdefault(label, []).append(store["store_id"])
+
+    for label, members in clusters.items():
+        for store in skt_stores:
+            if store["dbscan_cluster"] == label:
+                store["dbscan_cluster_size"] = len(members)
 
     overcrowded_clusters = {k: v for k, v in clusters.items() if len(v) >= 3}
-    print(f"[L1] DBSCAN: {len(skt_stores)} SKT 매장 분석, {len(overcrowded_clusters)}개 과밀 클러스터 발견")
-    for cid, members in overcrowded_clusters.items():
-        print(f"  클러스터 {cid}: {len(members)}개 매장")
+    print(f"[DBSCAN] {len(skt_stores)}개 SKT 매장 → {len(overcrowded_clusters)}개 과밀 클러스터")
     return skt_stores, overcrowded_clusters
 
-# ─── LAYER 2: Isolation Forest 이상 패턴 탐지 ───────────────────────────────
-def layer2_isolation_forest(skt_stores):
+# ─── LAYER B: Isolation Forest 수익성 이상 탐지 ──────────────────────────────
+def layer_isolation_forest(skt_stores):
     valid = [s for s in skt_stores if s["monthly_subs"] is not None]
 
     features = np.array([
-        [
-            s["monthly_subs"],
-            s["monthly_profit_krw"] / 1_000_000,
-            s["ms_share"] * 100,
-            s["foot_traffic_score"],
-            s["op_cost_monthly"] / 1_000_000,
-        ]
+        [s["monthly_subs"], s["monthly_profit_krw"] / 1_000_000,
+         s["ms_share"] * 100, s["foot_traffic_score"], s["op_cost_monthly"] / 1_000_000]
         for s in valid
     ])
 
-    scaler = StandardScaler()
-    X = scaler.fit_transform(features)
-
+    X = StandardScaler().fit_transform(features)
     iso = IsolationForest(contamination=0.12, random_state=42, n_estimators=100)
     preds = iso.fit_predict(X)
-    scores = iso.score_samples(X)  # lower = more anomalous
+    scores = iso.score_samples(X)
 
     for store, pred, score in zip(valid, preds, scores):
         store["if_anomaly"] = bool(pred == -1)
         store["if_score"] = round(float(score), 4)
 
-    anomalies = [s for s in valid if s["if_anomaly"]]
-    print(f"[L2] Isolation Forest: {len(anomalies)}/{len(valid)} 이상 매장 탐지 (contamination=12%)")
+    print(f"[Isolation Forest] {sum(1 for s in valid if s['if_anomaly'])}/{len(valid)}개 이상 매장 탐지")
     return skt_stores
 
-# ─── LAYER 3: Huff 모델 폐점 영향 시뮬레이션 ────────────────────────────────
-def layer3_huff(skt_stores):
-    """과밀+이상 매장 중 폐점 시뮬레이션 — 수요 재배분 계산"""
+# ─── LAYER C: Huff 모델 — 전체 SKT 매장 대상 수요 이동 계산 ─────────────────
+def layer_huff(skt_stores):
+    print(f"[Huff] {len(skt_stores)}개 전체 SKT 매장 시뮬레이션 중...")
 
-    candidates = [s for s in skt_stores if s.get("is_overcrowded") and s.get("if_anomaly")]
-    if not candidates:
-        # 과밀만이라도
-        candidates = sorted(
-            [s for s in skt_stores if s.get("is_overcrowded")],
-            key=lambda x: x.get("if_score", 0)
-        )[:5]
-
-    print(f"[L3] Huff 시뮬레이션 대상: {len(candidates)}개 매장")
-
-    for candidate in candidates[:8]:
-        nearby = [
+    for store in skt_stores:
+        nearby_skt = [
             s for s in skt_stores
-            if s["store_id"] != candidate["store_id"]
-            and haversine(candidate["lat"], candidate["lng"], s["lat"], s["lng"]) < 2.0
+            if s["store_id"] != store["store_id"]
+            and haversine(store["lat"], store["lng"], s["lat"], s["lng"]) < 2.0
         ]
+        store["nearby_skt_count"] = len(nearby_skt)
 
-        if not nearby:
-            candidate["huff_redistribution"] = None
+        if not nearby_skt:
+            store["huff_absorption_rate"] = 0.0
+            store["huff_redistribution"] = []
+            store["huff_lost_subs"] = store.get("monthly_subs") or 0
             continue
 
-        # Huff 확률: 매장규모(순증수) / 거리²
         weights = []
-        for n in nearby:
-            dist = max(0.1, haversine(candidate["lat"], candidate["lng"], n["lat"], n["lng"]))
-            size = n.get("monthly_subs") or 20
-            weights.append(size / (dist ** 2))
+        for n in nearby_skt:
+            dist = max(0.1, haversine(store["lat"], store["lng"], n["lat"], n["lng"]))
+            weights.append((n.get("monthly_subs") or 20) / (dist ** 2))
 
-        total_weight = sum(weights)
-        redistributed_subs = candidate.get("monthly_subs") or 0
+        total_w = sum(weights)
+        monthly_subs = store.get("monthly_subs") or 0
+        retention = 0.75
 
         redistribution = []
-        for n, w in zip(nearby[:5], weights[:5]):
-            ratio = w / total_weight if total_weight > 0 else 0
-            absorbed = round(redistributed_subs * ratio * 0.75)  # 75% 유지율 가정
+        for n, w in zip(nearby_skt[:5], weights[:5]):
+            ratio = w / total_w if total_w > 0 else 0
             redistribution.append({
                 "store_id": n["store_id"],
                 "store_name": n["store_name"],
-                "absorbed_subs": absorbed,
-                "distance_km": round(haversine(candidate["lat"], candidate["lng"], n["lat"], n["lng"]), 2)
+                "absorbed_subs": round(monthly_subs * ratio * retention),
+                "distance_km": round(haversine(store["lat"], store["lng"], n["lat"], n["lng"]), 2),
             })
 
-        candidate["huff_redistribution"] = redistribution
-        candidate["huff_retained_ratio"] = 0.75
-        candidate["huff_lost_subs"] = round(redistributed_subs * 0.25)
+        skt_absorption = sum(w for w in weights) / (total_w or 1) * retention
+        store["huff_absorption_rate"] = round(min(skt_absorption, 1.0), 3)
+        store["huff_redistribution"] = redistribution
+        store["huff_lost_subs"] = round(monthly_subs * (1 - store["huff_absorption_rate"]))
 
-    return skt_stores, candidates
+    return skt_stores
 
-# ─── LAYER 4: 신호 요약 ──────────────────────────────────────────────────────
-def layer4_signals(skt_stores, candidates, overcrowded_clusters):
+# ─── 렌즈 판정: 3개 목적함수 ✓/✗ ────────────────────────────────────────────
+def judge_lenses(store, thresholds=None):
+    t = thresholds or DEFAULT_THRESHOLDS
+
+    # 수익성: 적자 AND 이상치
+    profitability = (
+        (store.get("monthly_profit_krw") or 0) < t["profitability_max_profit_krw"]
+        and (store.get("if_score") or 0) < t["profitability_if_score_max"]
+    )
+
+    # M/S 방어: 인근 SKT가 충분히 흡수 가능
+    ms_defense = (
+        store.get("huff_absorption_rate", 0) >= t["ms_min_absorption_rate"]
+        and store.get("nearby_skt_count", 0) >= t["ms_min_nearby_skt"]
+    )
+
+    # 커버리지: 클러스터 내 대체 매장 충분
+    coverage = store.get("dbscan_cluster_size", 0) >= t["coverage_min_cluster_size"]
+
+    passed = sum([profitability, ms_defense, coverage])
+    if passed == 3:
+        verdict = "폐점 유력"
+    elif passed == 2:
+        verdict = "조건부 검토"
+    elif passed == 1:
+        verdict = "관찰"
+    else:
+        verdict = "유지"
+
+    return {
+        "lens_profitability": profitability,
+        "lens_ms_defense": ms_defense,
+        "lens_coverage": coverage,
+        "lens_passed": passed,
+        "verdict": verdict,
+    }
+
+# ─── 최종 집계 ───────────────────────────────────────────────────────────────
+def aggregate_results(skt_stores, thresholds=None):
     results = []
-
-    for s in candidates[:10]:
-        signals = []
-
-        if s.get("is_overcrowded"):
-            cluster_size = len(overcrowded_clusters.get(s.get("dbscan_cluster", -1), []))
-            signals.append(f"과밀 클러스터 (반경 500m 내 {cluster_size}개 SKT 매장)")
-
-        if s.get("if_anomaly"):
-            score = s.get("if_score", 0)
-            if s.get("monthly_profit_krw", 0) < 0:
-                signals.append(f"적자 운영 중 (월 {abs(s['monthly_profit_krw'])//10000}만원 손실)")
-            elif s.get("monthly_subs", 0) < 15:
-                signals.append(f"저성과 (월 순증 {s['monthly_subs']}건)")
-
-        if s.get("ms_share", 0.43) < 0.35:
-            signals.append(f"낮은 M/S ({s['ms_share']*100:.1f}%)")
-
-        huff = s.get("huff_redistribution")
-        if huff:
-            top = huff[0]
-            signals.append(f"폐점 시 {top['distance_km']}km 내 {top['store_name']}이 {top['absorbed_subs']}건 흡수 예상")
-
+    for s in skt_stores:
+        lens = judge_lenses(s, thresholds)
+        if lens["lens_passed"] == 0:
+            continue
         results.append({
             "store_id": s["store_id"],
             "store_name": s["store_name"],
@@ -297,17 +309,20 @@ def layer4_signals(skt_stores, candidates, overcrowded_clusters):
             "monthly_subs": s.get("monthly_subs"),
             "monthly_profit_krw": s.get("monthly_profit_krw"),
             "ms_share": s.get("ms_share"),
-            "is_overcrowded": s.get("is_overcrowded"),
-            "if_anomaly": s.get("if_anomaly"),
             "if_score": s.get("if_score"),
             "dbscan_cluster": s.get("dbscan_cluster"),
+            "dbscan_cluster_size": s.get("dbscan_cluster_size"),
+            "nearby_skt_count": s.get("nearby_skt_count"),
+            "huff_absorption_rate": s.get("huff_absorption_rate"),
             "huff_redistribution": s.get("huff_redistribution"),
             "huff_lost_subs": s.get("huff_lost_subs"),
-            "signals": signals,
-            "signal_count": len(signals),
+            **lens,
         })
 
-    results.sort(key=lambda x: x["signal_count"], reverse=True)
+    results.sort(key=lambda x: (-x["lens_passed"], x.get("monthly_profit_krw") or 0))
+    print(f"[판정] 폐점 유력: {sum(1 for r in results if r['verdict']=='폐점 유력')}개 | "
+          f"조건부: {sum(1 for r in results if r['verdict']=='조건부 검토')}개 | "
+          f"관찰: {sum(1 for r in results if r['verdict']=='관찰')}개")
     return results
 
 # ─── MAIN ────────────────────────────────────────────────────────────────────
@@ -320,28 +335,14 @@ if __name__ == "__main__":
     lgu = [s for s in stores if s["carrier"] == "LGU"]
     print(f"매장 현황: SKT {len(skt)}개(실제 위치·시뮬레이션 성능), KT {len(kt)}개(실제), LGU+ {len(lgu)}개(실제)\n")
 
-    skt, overcrowded = layer1_dbscan(stores)
+    # 3개 레이어 병렬 실행 (독립적으로 각자 신호 생성)
+    skt, overcrowded = layer_dbscan(stores)
+    skt = layer_isolation_forest(skt)
+    skt = layer_huff(skt)
     print()
-    skt = layer2_isolation_forest(skt)
-    print()
-    skt, candidates = layer3_huff(skt)
-    print()
-    signal_results = layer4_signals(skt, candidates, overcrowded)
 
-    output = {
-        "summary": {
-            "total_skt": len(skt),
-            "total_kt": len(kt),
-            "total_lgu": len(lgu),
-            "overcrowded_clusters": len(overcrowded),
-            "anomaly_stores": sum(1 for s in skt if s.get("if_anomaly")),
-            "closure_candidates": len(signal_results),
-            "data_note": "SKT/KT/LGU+ 위치 모두 실제 데이터 (2025.06 수집). SKT 성능지표(LTV/손익/M/S)는 상권 기반 시뮬레이션.",
-        },
-        "all_stores": stores,
-        "closure_candidates": signal_results,
-        "zones": COMMERCIAL_ZONES,
-    }
+    # 렌즈 판정 집계 (임계값 변경 시 여기만 수정)
+    results = aggregate_results(skt, thresholds=DEFAULT_THRESHOLDS)
 
     def default_serializer(obj):
         if isinstance(obj, (np.bool_, np.integer)):
@@ -350,21 +351,40 @@ if __name__ == "__main__":
             return float(obj)
         raise TypeError(f"Not serializable: {type(obj)}")
 
+    output = {
+        "summary": {
+            "total_skt": len(skt),
+            "total_kt": len(kt),
+            "total_lgu": len(lgu),
+            "overcrowded_clusters": len(overcrowded),
+            "anomaly_stores": sum(1 for s in skt if s.get("if_anomaly")),
+            "verdict_counts": {
+                "폐점 유력": sum(1 for r in results if r["verdict"] == "폐점 유력"),
+                "조건부 검토": sum(1 for r in results if r["verdict"] == "조건부 검토"),
+                "관찰": sum(1 for r in results if r["verdict"] == "관찰"),
+            },
+            "data_note": "SKT/KT/LGU+ 위치 모두 실제 데이터 (2025.06 수집). SKT 성능지표(LTV/손익/M/S)는 상권 기반 시뮬레이션.",
+            "thresholds": DEFAULT_THRESHOLDS,
+        },
+        "all_stores": stores,
+        "closure_candidates": results,
+        "zones": COMMERCIAL_ZONES,
+    }
+
     with open("prototype/simulation_results.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2, default=default_serializer)
 
     print(f"\n=== 결과 ===")
-    print(f"과밀 클러스터: {len(overcrowded)}개")
-    print(f"이상 탐지 매장: {output['summary']['anomaly_stores']}개")
-    print(f"복수 신호 폐점 후보: {len(signal_results)}개\n")
+    for verdict in ["폐점 유력", "조건부 검토", "관찰"]:
+        count = output["summary"]["verdict_counts"][verdict]
+        print(f"  {verdict}: {count}개")
 
-    print("TOP 폐점 검토 후보:")
-    for r in signal_results[:5]:
-        profit_str = f"{r['monthly_profit_krw']//10000:+,}만원" if r['monthly_profit_krw'] else "N/A"
+    print("\nTOP 폐점 검토 후보:")
+    for r in [x for x in results if x["verdict"] == "폐점 유력"][:5]:
+        profit_str = f"{r['monthly_profit_krw']//10000:+,}만원" if r["monthly_profit_krw"] else "N/A"
         print(f"  [{r['store_id']}] {r['store_name']}")
-        print(f"    월순증:{r['monthly_subs']}건 | 손익:{profit_str} | 신호:{r['signal_count']}개")
-        for sig in r["signals"]:
-            print(f"    • {sig}")
+        print(f"    손익:{profit_str} | 흡수율:{r['huff_absorption_rate']:.0%} | 클러스터:{r['dbscan_cluster_size']}개")
+        print(f"    수익성:{r['lens_profitability']} | M/S방어:{r['lens_ms_defense']} | 커버리지:{r['lens_coverage']}")
         print()
 
     print(f"결과 저장: prototype/simulation_results.json")
