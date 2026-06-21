@@ -1,0 +1,2572 @@
+[
+  {
+    "store_id": "KT-327",
+    "carrier": "KT",
+    "store_name": "KT플라자 김천혁신점",
+    "address": "경북 김천시 혁신3로 15",
+    "lat": 36.117318,
+    "lng": 128.182927,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-326",
+    "carrier": "KT",
+    "store_name": "KT플라자 종각점",
+    "address": "서울 종로구 종로 72",
+    "lat": 37.56995,
+    "lng": 126.985388,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-325",
+    "carrier": "KT",
+    "store_name": "KT플라자 상록수역점",
+    "address": "경기 안산시 상록구 상록수로 54",
+    "lat": 37.302188,
+    "lng": 126.86593,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-324",
+    "carrier": "KT",
+    "store_name": "KT플라자 진접점",
+    "address": "경기 남양주시 진접읍 해밀예당1로 30",
+    "lat": 37.711782,
+    "lng": 127.186451,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-323",
+    "carrier": "KT",
+    "store_name": "KT플라자 진평점",
+    "address": "경북 구미시 인동35길 5",
+    "lat": 36.094951,
+    "lng": 128.432655,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-322",
+    "carrier": "KT",
+    "store_name": "KT플라자 사상역점",
+    "address": "부산 사상구 사상로 200",
+    "lat": 35.162961,
+    "lng": 128.984602,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-320",
+    "carrier": "KT",
+    "store_name": "KT플라자 강릉유천점",
+    "address": "강원특별자치도 강릉시 선수촌로 78",
+    "lat": 37.757813,
+    "lng": 128.870676,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-319",
+    "carrier": "KT",
+    "store_name": "KT플라자 학동역점",
+    "address": "서울 강남구 논현로 667",
+    "lat": 37.513568,
+    "lng": 127.030541,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-318",
+    "carrier": "KT",
+    "store_name": "KT플라자 다산신도시점",
+    "address": "경기 남양주시 다산중앙로145번길 17",
+    "lat": 37.625293,
+    "lng": 127.150474,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-317",
+    "carrier": "KT",
+    "store_name": "KT플라자 서귀시청점",
+    "address": "제주특별자치도 서귀포시 일주동로 8667",
+    "lat": 33.253136,
+    "lng": 126.562305,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-314",
+    "carrier": "KT",
+    "store_name": "KT플라자 광화문온맞이점",
+    "address": "서울 종로구 세종대로 178",
+    "lat": 37.572151,
+    "lng": 126.977792,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-305",
+    "carrier": "KT",
+    "store_name": "리본 신촌점(중고폰 전용)",
+    "address": "서울 서대문구 연세로 20, 1층",
+    "lat": 37.557479,
+    "lng": 126.937069,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-304",
+    "carrier": "KT",
+    "store_name": "KT플라자 후평점",
+    "address": "강원도 춘천시 후석로 309",
+    "lat": 37.878631,
+    "lng": 127.750588,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-303",
+    "carrier": "KT",
+    "store_name": "KT플라자 황금점",
+    "address": "대구광역시 수성구 청수로45길 32",
+    "lat": 35.842016,
+    "lng": 128.632995,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-302",
+    "carrier": "KT",
+    "store_name": "KT플라자 화정점",
+    "address": "울산광역시 동구 대학길 49",
+    "lat": 35.498902,
+    "lng": 129.42043,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-301",
+    "carrier": "KT",
+    "store_name": "KT플라자 화정역점",
+    "address": "경기도 고양시 덕양구 화정로 65-1",
+    "lat": 37.635388,
+    "lng": 126.833172,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-300",
+    "carrier": "KT",
+    "store_name": "KT플라자 화서점",
+    "address": "경기 수원시 팔달구 팔달로 117",
+    "lat": 37.27916,
+    "lng": 127.0036,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-299",
+    "carrier": "KT",
+    "store_name": "KT플라자 화봉점",
+    "address": "울산광역시 북구 화봉로 73 A동 101호",
+    "lat": 35.588696,
+    "lng": 129.367049,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-298",
+    "carrier": "KT",
+    "store_name": "KT플라자 화명역점",
+    "address": "부산광역시 북구 금곡대로285번길 19 1층",
+    "lat": 35.233772,
+    "lng": 129.012324,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-297",
+    "carrier": "KT",
+    "store_name": "KT플라자 화곡역점",
+    "address": "서울특별시 강서구 화곡로 164, 1층",
+    "lat": 37.541254,
+    "lng": 126.83989,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-296",
+    "carrier": "KT",
+    "store_name": "KT플라자 홍천중앙점",
+    "address": "강원도 홍천군 홍천읍 신장대로 74",
+    "lat": 37.690533,
+    "lng": 127.884375,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-295",
+    "carrier": "KT",
+    "store_name": "KT플라자 홍대애드샵플러스점",
+    "address": "서울특별시 마포구 양화로18길 3",
+    "lat": 37.557031,
+    "lng": 126.92457,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-294",
+    "carrier": "KT",
+    "store_name": "KT플라자 호계점",
+    "address": "울산광역시 북구 호계로 280",
+    "lat": 35.628172,
+    "lng": 129.351194,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-293",
+    "carrier": "KT",
+    "store_name": "KT플라자 해운대장산역점",
+    "address": "부산광역시 해운대구 해운대로 814, 156,157,158호",
+    "lat": 35.169566,
+    "lng": 129.17764,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-292",
+    "carrier": "KT",
+    "store_name": "KT플라자 해운대역점",
+    "address": "부산광역시 해운대구 해운대로 601 에이치스위트 B동 107-2호",
+    "lat": 35.163164,
+    "lng": 129.157263,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-291",
+    "carrier": "KT",
+    "store_name": "KT플라자 한성대점",
+    "address": "서울특별시 성북구 동소문로 16 일신빌딩",
+    "lat": 37.589022,
+    "lng": 127.007975,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-290",
+    "carrier": "KT",
+    "store_name": "KT플라자 학동점",
+    "address": "전라남도 여수시 망마로 42",
+    "lat": 34.759149,
+    "lng": 127.667316,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-289",
+    "carrier": "KT",
+    "store_name": "KT플라자 하안점",
+    "address": "경기도 광명시 하안로 295",
+    "lat": 37.461972,
+    "lng": 126.879971,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-288",
+    "carrier": "KT",
+    "store_name": "KT플라자 하남신장점",
+    "address": "경기도 하남시 신평로 53",
+    "lat": 37.538581,
+    "lng": 127.204703,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-287",
+    "carrier": "KT",
+    "store_name": "KT플라자 포항효자점",
+    "address": "경상북도 포항시 남구 효성로25",
+    "lat": 36.006535,
+    "lng": 129.336465,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-286",
+    "carrier": "KT",
+    "store_name": "KT플라자 평화점",
+    "address": "전북특별자치도 전주시 완산구 모악로 4760",
+    "lat": 35.794275,
+    "lng": 127.132689,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-285",
+    "carrier": "KT",
+    "store_name": "KT플라자 평택역점",
+    "address": "경기도 평택시 평택로32번길 2",
+    "lat": 36.990611,
+    "lng": 127.088311,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-284",
+    "carrier": "KT",
+    "store_name": "KT플라자 테크노점",
+    "address": "대전광역시 유성구 테크노4로 141 테크노크리닉 1층",
+    "lat": 36.422262,
+    "lng": 127.387807,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-283",
+    "carrier": "KT",
+    "store_name": "KT플라자 퀸즈파크옥길점",
+    "address": "경기도 부천시 소사구 옥길로 116 퀸즈파크 A동 121호",
+    "lat": 37.467007,
+    "lng": 126.82267,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-282",
+    "carrier": "KT",
+    "store_name": "KT플라자 칠곡운암점",
+    "address": "대구광역시 북구 구암로 135, 1층",
+    "lat": 35.932099,
+    "lng": 128.55571,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-281",
+    "carrier": "KT",
+    "store_name": "KT플라자 충주충인점",
+    "address": "충청북도 충주시 중앙로 73",
+    "lat": 36.972837,
+    "lng": 127.931645,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-280",
+    "carrier": "KT",
+    "store_name": "KT플라자 충장점",
+    "address": "광주광역시 동구 중앙로 158-1",
+    "lat": 35.148114,
+    "lng": 126.913405,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-279",
+    "carrier": "KT",
+    "store_name": "KT플라자 청주중앙점",
+    "address": "충북 청주시 상당구 상당로81번길 19",
+    "lat": 36.635488,
+    "lng": 127.489255,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-278",
+    "carrier": "KT",
+    "store_name": "KT플라자 청수점",
+    "address": "충청남도 천안시 동남구 청수4로 16",
+    "lat": 36.783267,
+    "lng": 127.152876,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-277",
+    "carrier": "KT",
+    "store_name": "KT플라자 청라커낼웨이점",
+    "address": "인천광역시 서구 청라라임로 57 영화블렌하임 106,107,108호",
+    "lat": 37.532613,
+    "lng": 126.65291,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-276",
+    "carrier": "KT",
+    "store_name": "KT플라자 철산점",
+    "address": "경기도 광명시 철산로 23 대광빌딩",
+    "lat": 37.476627,
+    "lng": 126.868495,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-275",
+    "carrier": "KT",
+    "store_name": "KT플라자 천호점",
+    "address": "서울특별시 강동구 올림픽로 660",
+    "lat": 37.54017,
+    "lng": 127.12457,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-274",
+    "carrier": "KT",
+    "store_name": "KT플라자 진주혁신점",
+    "address": "경상남도 진주시 충의로 30 SH타워 105호",
+    "lat": 35.176637,
+    "lng": 128.148429,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-273",
+    "carrier": "KT",
+    "store_name": "KT플라자 진주중안점",
+    "address": "경상남도 진주시 비봉로34번길 16",
+    "lat": 35.19395,
+    "lng": 128.082574,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-272",
+    "carrier": "KT",
+    "store_name": "KT플라자 지행역점",
+    "address": "경기도 동두천시 중앙로 126 생연프라자 110,111호",
+    "lat": 37.892839,
+    "lng": 127.052527,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-271",
+    "carrier": "KT",
+    "store_name": "KT플라자 지축역점",
+    "address": "경기 고양시 덕양구 지축1로 39, 1층 108호",
+    "lat": 37.648829,
+    "lng": 126.914604,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-270",
+    "carrier": "KT",
+    "store_name": "KT플라자 지산점",
+    "address": "대구광역시 수성구 지범로 183, 102,102-1호",
+    "lat": 35.821619,
+    "lng": 128.639846,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-269",
+    "carrier": "KT",
+    "store_name": "KT플라자 중문점",
+    "address": "충청북도 청주시 서원구 1순환로 666",
+    "lat": 36.634146,
+    "lng": 127.460105,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-268",
+    "carrier": "KT",
+    "store_name": "KT플라자 중계아울렛점",
+    "address": "서울특별시 노원구 동일로204가길 34 씨앤미빌딩 108호",
+    "lat": 37.64075,
+    "lng": 127.068172,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-267",
+    "carrier": "KT",
+    "store_name": "KT플라자 죽전점",
+    "address": "대구광역시 달서구 달구벌대로 1530, 301동 112~113호",
+    "lat": 35.849339,
+    "lng": 128.533919,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-266",
+    "carrier": "KT",
+    "store_name": "KT플라자 조례점",
+    "address": "전라남도 순천시 신월큰길 1-4",
+    "lat": 34.960437,
+    "lng": 127.520792,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-265",
+    "carrier": "KT",
+    "store_name": "KT플라자 제주중앙점",
+    "address": "제주특별자치도 제주시 중앙로 70, 1층",
+    "lat": 33.51203,
+    "lng": 126.524412,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-264",
+    "carrier": "KT",
+    "store_name": "KT플라자 정자역점",
+    "address": "경기도 성남시 분당구 느티로 16 젤존타워1 108,109호",
+    "lat": 37.368163,
+    "lng": 127.106312,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-263",
+    "carrier": "KT",
+    "store_name": "KT플라자 정릉점",
+    "address": "서울특별시 성북구 보국문로 43",
+    "lat": 37.608173,
+    "lng": 127.009889,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-262",
+    "carrier": "KT",
+    "store_name": "KT플라자 정관로점",
+    "address": "부산광역시 기장군 정관면 정관로 560",
+    "lat": 35.321348,
+    "lng": 129.17509,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-261",
+    "carrier": "KT",
+    "store_name": "KT플라자 전하아이파크점",
+    "address": "울산광역시 동구 봉수로 270, 전하아이파크2단지상가 300동 112호",
+    "lat": 35.50986,
+    "lng": 129.422014,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-260",
+    "carrier": "KT",
+    "store_name": "KT플라자 전포카페거리점",
+    "address": "부산광역시 진구 동천로 74 1층",
+    "lat": 35.155269,
+    "lng": 129.06253,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-258",
+    "carrier": "KT",
+    "store_name": "KT플라자 장유점",
+    "address": "경상남도 김해시 능동로 167번길 1 103호",
+    "lat": 35.203193,
+    "lng": 128.808972,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-257",
+    "carrier": "KT",
+    "store_name": "KT플라자 자양번영로점",
+    "address": "서울특별시 광진구 뚝섬로 590 아주빌딩",
+    "lat": 37.533135,
+    "lng": 127.075301,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-256",
+    "carrier": "KT",
+    "store_name": "KT플라자 일산점",
+    "address": "경기도 고양시 일산동구 중앙로 1275번길 38-15 삼희포시즌프라자 1층",
+    "lat": 37.659912,
+    "lng": 126.770093,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-255",
+    "carrier": "KT",
+    "store_name": "KT플라자 인후점",
+    "address": "전북특별자치도 전주시 덕진구 안덕원로 258-1",
+    "lat": 35.836388,
+    "lng": 127.155274,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-253",
+    "carrier": "KT",
+    "store_name": "KT플라자 인계점",
+    "address": "경기도 수원시 팔달구 권광로 184, 127,128호",
+    "lat": 37.263884,
+    "lng": 127.033102,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-252",
+    "carrier": "KT",
+    "store_name": "KT플라자 이수역점",
+    "address": "서울특별시 동작구 동작대로 127",
+    "lat": 37.48796,
+    "lng": 126.981957,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-251",
+    "carrier": "KT",
+    "store_name": "KT플라자 의정부로데오점",
+    "address": "경기도 의정부시 행복로 31",
+    "lat": 37.741438,
+    "lng": 127.04957,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-250",
+    "carrier": "KT",
+    "store_name": "KT플라자 응암역점",
+    "address": "서울특별시 은평구 은평로 63, 1층",
+    "lat": 37.599077,
+    "lng": 126.914846,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-249",
+    "carrier": "KT",
+    "store_name": "KT플라자 을지로명동본점",
+    "address": "서울특별시 중구 명동7길 25, 1층",
+    "lat": 37.564914,
+    "lng": 126.984192,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-248",
+    "carrier": "KT",
+    "store_name": "KT플라자 은행점",
+    "address": "대전광역시 중구 중앙로164번길 18, 지하1~지상1층",
+    "lat": 36.328552,
+    "lng": 127.427889,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-247",
+    "carrier": "KT",
+    "store_name": "KT플라자 율하점",
+    "address": "대구광역시 동구 안심로 22길 40-5",
+    "lat": 35.863471,
+    "lng": 128.694848,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-246",
+    "carrier": "KT",
+    "store_name": "KT플라자 유성점",
+    "address": "대전광역시 유성구 대학로 1, 1층",
+    "lat": 36.354114,
+    "lng": 127.341166,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-245",
+    "carrier": "KT",
+    "store_name": "KT플라자 원흥역점",
+    "address": "경기도 고양시 덕양구 권율대로 672 봄오피스텔 116호",
+    "lat": 37.649865,
+    "lng": 126.874174,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-244",
+    "carrier": "KT",
+    "store_name": "KT플라자 원주무실점",
+    "address": "강원도 원주시 시청로 96, 1층",
+    "lat": 37.336184,
+    "lng": 127.928484,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-243",
+    "carrier": "KT",
+    "store_name": "KT플라자 원주단구점",
+    "address": "강원도 원주시 서원대로 392, 112호",
+    "lat": 37.331019,
+    "lng": 127.948401,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-242",
+    "carrier": "KT",
+    "store_name": "KT플라자 원종점",
+    "address": "경기 부천시 오정구 소사로 712",
+    "lat": 37.519576,
+    "lng": 126.805124,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-241",
+    "carrier": "KT",
+    "store_name": "KT플라자 울산성남아케이드점",
+    "address": "울산광역시 중구 학성로 64",
+    "lat": 35.554376,
+    "lng": 129.318257,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-240",
+    "carrier": "KT",
+    "store_name": "KT플라자 운양점",
+    "address": "경기도 김포시 김포한강11로 288-31 에이스프라자 106호",
+    "lat": 37.654877,
+    "lng": 126.684077,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-239",
+    "carrier": "KT",
+    "store_name": "KT플라자 우장산역점",
+    "address": "서울특별시 강서구 강서로 251 1층",
+    "lat": 37.548128,
+    "lng": 126.836022,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-238",
+    "carrier": "KT",
+    "store_name": "KT플라자 용현점",
+    "address": "인천 미추홀구 낙섬중로35번길 1",
+    "lat": 37.451369,
+    "lng": 126.63711,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-237",
+    "carrier": "KT",
+    "store_name": "KT플라자 용해점",
+    "address": "전라남도 목포시 포미로 16",
+    "lat": 34.81743,
+    "lng": 126.397895,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-236",
+    "carrier": "KT",
+    "store_name": "KT플라자 외대역점",
+    "address": "서울특별시 동대문구 휘경로 7 1층",
+    "lat": 37.596283,
+    "lng": 127.061054,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-235",
+    "carrier": "KT",
+    "store_name": "KT플라자 온의점",
+    "address": "강원도 춘천시 방송길 77, 춘천 센트럴타워 푸르지오 1212호",
+    "lat": 37.869479,
+    "lng": 127.720477,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-234",
+    "carrier": "KT",
+    "store_name": "KT플라자 온양온천점",
+    "address": "충청남도 아산시 충무로 7-1 102호",
+    "lat": 36.781949,
+    "lng": 127.00404,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-233",
+    "carrier": "KT",
+    "store_name": "KT플라자 옥정신도시점",
+    "address": "경기도 양주시 회천남로 92",
+    "lat": 37.81858,
+    "lng": 127.092209,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-232",
+    "carrier": "KT",
+    "store_name": "KT플라자 옥련점",
+    "address": "인천광역시 연수구 옥련동 462-136",
+    "lat": 37.424505,
+    "lng": 126.646592,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-231",
+    "carrier": "KT",
+    "store_name": "KT플라자 오천문덕점",
+    "address": "경상북도 포항시 남구 원동로 54 1층",
+    "lat": 35.967881,
+    "lng": 129.403077,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-230",
+    "carrier": "KT",
+    "store_name": "KT플라자 오산중앙점",
+    "address": "경기도 오산시 성호대로 93",
+    "lat": 37.149067,
+    "lng": 127.071802,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-229",
+    "carrier": "KT",
+    "store_name": "KT플라자 오목교점",
+    "address": "서울특별시 양천구 목동동로 293, 104호",
+    "lat": 37.528178,
+    "lng": 126.875772,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-228",
+    "carrier": "KT",
+    "store_name": "KT플라자 오리점",
+    "address": "경기도 성남시 분당구 성남대로 34, 1층",
+    "lat": 37.338875,
+    "lng": 127.109393,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-227",
+    "carrier": "KT",
+    "store_name": "KT플라자 영통역점",
+    "address": "경기도 수원시 영통구 반달로 22",
+    "lat": 37.251402,
+    "lng": 127.074607,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-225",
+    "carrier": "KT",
+    "store_name": "KT플라자 영등포구청역점",
+    "address": "서울특별시 영등포구 당산로 132",
+    "lat": 37.526298,
+    "lng": 126.897006,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-224",
+    "carrier": "KT",
+    "store_name": "KT플라자 영등점",
+    "address": "전북특별자치도 익산시 무왕로 1038, 1층",
+    "lat": 35.958137,
+    "lng": 126.972121,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-223",
+    "carrier": "KT",
+    "store_name": "KT플라자 영남대점",
+    "address": "경상북도 경산시 대학로 285",
+    "lat": 35.836788,
+    "lng": 128.753353,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-222",
+    "carrier": "KT",
+    "store_name": "KT플라자 연신내역점",
+    "address": "서울특별시 은평구 통일로 842(스타벅스옆 KT플라자 연신내역점)",
+    "lat": 37.61869,
+    "lng": 126.922064,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-221",
+    "carrier": "KT",
+    "store_name": "KT플라자 연수청학점",
+    "address": "인천광역시 연수구 먼우금로 189 소망글로벌 106,107호",
+    "lat": 37.414624,
+    "lng": 126.675854,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-220",
+    "carrier": "KT",
+    "store_name": "KT플라자 연동점",
+    "address": "제주특별자치도 제주시 노연로 110 1층",
+    "lat": 33.485622,
+    "lng": 126.491802,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-219",
+    "carrier": "KT",
+    "store_name": "KT플라자 역곡점",
+    "address": "경기도 부천시 원미구 부일로 749번길 4",
+    "lat": 37.486526,
+    "lng": 126.812999,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-218",
+    "carrier": "KT",
+    "store_name": "KT플라자 여의도역점",
+    "address": "서울특별시 영등포구 국제금융로2길 37, 101호",
+    "lat": 37.522945,
+    "lng": 126.924286,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-217",
+    "carrier": "KT",
+    "store_name": "KT플라자 여수충무점",
+    "address": "전라남도 여수시 중앙로 35",
+    "lat": 34.740457,
+    "lng": 127.731662,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-216",
+    "carrier": "KT",
+    "store_name": "KT플라자 양재시민의숲점",
+    "address": "서울특별시 서초구 마방로2길 94",
+    "lat": 37.469476,
+    "lng": 127.039814,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-215",
+    "carrier": "KT",
+    "store_name": "KT플라자 양산이마트점",
+    "address": "경상남도 양산시 양산역1길 14",
+    "lat": 35.336123,
+    "lng": 129.027571,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-214",
+    "carrier": "KT",
+    "store_name": "KT플라자 양산남부시장점",
+    "address": "경상남도 양산시 중앙로 144",
+    "lat": 35.343471,
+    "lng": 129.038224,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-213",
+    "carrier": "KT",
+    "store_name": "KT플라자 안양일번가점",
+    "address": "경기도 안양시 만안구 안양로292번길 13",
+    "lat": 37.398826,
+    "lng": 126.922508,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-212",
+    "carrier": "KT",
+    "store_name": "KT플라자 안성중앙점",
+    "address": "경기도 안성시 중앙로 393 101호",
+    "lat": 37.007513,
+    "lng": 127.270568,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-211",
+    "carrier": "KT",
+    "store_name": "KT플라자 안산중앙역점",
+    "address": "경기도 안산시 단원구 예술대학로 9, 103,104호",
+    "lat": 37.317828,
+    "lng": 126.83652,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-210",
+    "carrier": "KT",
+    "store_name": "KT플라자 안산역점",
+    "address": "경기도 안산시 단원구 중앙대로 453",
+    "lat": 37.328359,
+    "lng": 126.789699,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-209",
+    "carrier": "KT",
+    "store_name": "KT플라자 안산선부점",
+    "address": "경기 안산시 단원구 선부광장북로 36, 상가동118호~119호",
+    "lat": 37.337435,
+    "lng": 126.811713,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-208",
+    "carrier": "KT",
+    "store_name": "KT플라자 안동홈플러스점",
+    "address": "경상북도 안동시 경동로 662",
+    "lat": 36.56293,
+    "lng": 128.730299,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-207",
+    "carrier": "KT",
+    "store_name": "KT플라자 안동중앙점",
+    "address": "경상북도 안동시 문화광장길 40",
+    "lat": 36.564898,
+    "lng": 128.731101,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-206",
+    "carrier": "KT",
+    "store_name": "KT플라자 안동점",
+    "address": "경상북도 안동시 경북대로 391",
+    "lat": 36.564251,
+    "lng": 128.700976,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-205",
+    "carrier": "KT",
+    "store_name": "KT플라자 안동옥동점",
+    "address": "경상북도 안동시 광명로 171-1",
+    "lat": 36.56295,
+    "lng": 128.701568,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-204",
+    "carrier": "KT",
+    "store_name": "KT플라자 신촌역점",
+    "address": "서울특별시 마포구 백범로 3",
+    "lat": 37.554403,
+    "lng": 126.937205,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-203",
+    "carrier": "KT",
+    "store_name": "KT플라자 신천역점",
+    "address": "서울특별시 송파구 올림픽로 124, 1층",
+    "lat": 37.511394,
+    "lng": 127.084435,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-202",
+    "carrier": "KT",
+    "store_name": "KT플라자 신정네거리역점",
+    "address": "서울특별시 양천구 중앙로 274",
+    "lat": 37.520756,
+    "lng": 126.85311,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-201",
+    "carrier": "KT",
+    "store_name": "KT플라자 신월성점",
+    "address": "대구광역시 달서구 조암로 24 A동 107,108호",
+    "lat": 35.825554,
+    "lng": 128.527099,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-200",
+    "carrier": "KT",
+    "store_name": "KT플라자 신용산역점",
+    "address": "서울특별시 용산구 한강대로95 래미안용산더센트럴105호",
+    "lat": 37.528817,
+    "lng": 126.966654,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-199",
+    "carrier": "KT",
+    "store_name": "KT플라자 신영통점",
+    "address": "경기도 수원시 영통구 영통로 136, 114호",
+    "lat": 37.239617,
+    "lng": 127.056305,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-198",
+    "carrier": "KT",
+    "store_name": "KT플라자 신사역점",
+    "address": "서울특별시 강남구 도산대로 123",
+    "lat": 37.517453,
+    "lng": 127.021893,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-197",
+    "carrier": "KT",
+    "store_name": "KT플라자 신림점",
+    "address": "서울특별시 관악구 신림로 360-1",
+    "lat": 37.486494,
+    "lng": 126.929458,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-196",
+    "carrier": "KT",
+    "store_name": "KT플라자 신대점",
+    "address": "전라남도 순천시 신대로 116, 1층",
+    "lat": 34.933815,
+    "lng": 127.549232,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-195",
+    "carrier": "KT",
+    "store_name": "KT플라자 신당점",
+    "address": "서울특별시 중구 퇴계로 434",
+    "lat": 37.565508,
+    "lng": 127.019773,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-194",
+    "carrier": "KT",
+    "store_name": "KT플라자 신논현점",
+    "address": "서울특별시 서초구 강남대로 495 1층",
+    "lat": 37.506303,
+    "lng": 127.023195,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-193",
+    "carrier": "KT",
+    "store_name": "KT플라자 신길점",
+    "address": "서울특별시 영등포구 도신로60길 2, 1층 102호",
+    "lat": 37.511784,
+    "lng": 126.91683,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-192",
+    "carrier": "KT",
+    "store_name": "KT플라자 신길뉴타운점",
+    "address": "서울특별시 영등포구 신길로 28길 9, 20호",
+    "lat": 37.503319,
+    "lng": 126.910986,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-191",
+    "carrier": "KT",
+    "store_name": "KT플라자 시지점",
+    "address": "대구광역시 수성구 달구벌대로 3205",
+    "lat": 35.840487,
+    "lng": 128.707457,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-190",
+    "carrier": "KT",
+    "store_name": "KT플라자 시네마점",
+    "address": "경상북도 포항시 북구 중앙상가길 18-1",
+    "lat": 36.036975,
+    "lng": 129.363091,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-189",
+    "carrier": "KT",
+    "store_name": "KT플라자 순천연향점",
+    "address": "전라남도 순천시 연향중앙상가길 9, 104호",
+    "lat": 34.952931,
+    "lng": 127.519527,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-188",
+    "carrier": "KT",
+    "store_name": "KT플라자 수지구청점",
+    "address": "경기도 용인시 수지구 풍덕천로 140",
+    "lat": 37.323701,
+    "lng": 127.097125,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-187",
+    "carrier": "KT",
+    "store_name": "KT플라자 수유점",
+    "address": "서울특별시 강북구 도봉로 342, 1층",
+    "lat": 37.638035,
+    "lng": 127.026129,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-186",
+    "carrier": "KT",
+    "store_name": "KT플라자 수원매탄점",
+    "address": "경기 수원시 영통구 중부대로 259",
+    "lat": 37.27499,
+    "lng": 127.044559,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-185",
+    "carrier": "KT",
+    "store_name": "KT플라자 수송점",
+    "address": "전북특별자치도 군산시 월명로 252",
+    "lat": 35.966447,
+    "lng": 126.716127,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-184",
+    "carrier": "KT",
+    "store_name": "KT플라자 수내푸른마을점",
+    "address": "경기도 성남시 분당구 돌마로366번길 42 동한프라자 106호",
+    "lat": 37.36718,
+    "lng": 127.126749,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-183",
+    "carrier": "KT",
+    "store_name": "KT플라자 수내역점",
+    "address": "경기도 성남시 분당구 백현로101번길 16, 115~116호",
+    "lat": 37.37701,
+    "lng": 127.11273,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-182",
+    "carrier": "KT",
+    "store_name": "KT플라자 송촌점",
+    "address": "대전광역시 대덕구 계족산로81번길 60 에스파스빌딩 101호",
+    "lat": 36.365511,
+    "lng": 127.43882,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-181",
+    "carrier": "KT",
+    "store_name": "KT플라자 송도점",
+    "address": "인천광역시 연수구 신송로125번길 13, 1동 102호",
+    "lat": 37.394565,
+    "lng": 126.651182,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-180",
+    "carrier": "KT",
+    "store_name": "KT플라자 송내역점",
+    "address": "경기도 부천시 소사구 송내대로 35",
+    "lat": 37.486723,
+    "lng": 126.752841,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-179",
+    "carrier": "KT",
+    "store_name": "KT플라자 세종첫마을점",
+    "address": "세종특별자치시 한누리대로 201",
+    "lat": 36.48257,
+    "lng": 127.260145,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-178",
+    "carrier": "KT",
+    "store_name": "KT플라자 세종중앙점",
+    "address": "세종특별자치시 보듬3로 95",
+    "lat": 36.511382,
+    "lng": 127.248914,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-177",
+    "carrier": "KT",
+    "store_name": "KT플라자 성신여대점",
+    "address": "서울특별시 성북구 동소문로 98",
+    "lat": 37.592252,
+    "lng": 127.016173,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-176",
+    "carrier": "KT",
+    "store_name": "KT플라자 성서계명대점",
+    "address": "대구광역시 달서구 계대동문로 6-1",
+    "lat": 35.855392,
+    "lng": 128.492996,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-175",
+    "carrier": "KT",
+    "store_name": "KT플라자 성복역점",
+    "address": "경기도 용인시 수지구 수지로 119 1층 114호",
+    "lat": 37.313051,
+    "lng": 127.079017,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-174",
+    "carrier": "KT",
+    "store_name": "KT플라자 선운점",
+    "address": "광주광역시 광산구 선운중앙로 46",
+    "lat": 35.148087,
+    "lng": 126.777049,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-172",
+    "carrier": "KT",
+    "store_name": "KT플라자 선릉사거리점",
+    "address": "서울 강남구 선릉로 515 동인빌딩 1층",
+    "lat": 37.505447,
+    "lng": 127.048235,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-171",
+    "carrier": "KT",
+    "store_name": "KT플라자 석사점",
+    "address": "강원도 춘천시 지석로 85",
+    "lat": 37.85115,
+    "lng": 127.744862,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-170",
+    "carrier": "KT",
+    "store_name": "KT플라자 석바위점",
+    "address": "인천광역시 미추홀구 경원대로 863",
+    "lat": 37.45989,
+    "lng": 126.689242,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-169",
+    "carrier": "KT",
+    "store_name": "KT플라자 석남역점",
+    "address": "인천 서구 가정로 237-1",
+    "lat": 37.506144,
+    "lng": 126.671992,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-168",
+    "carrier": "KT",
+    "store_name": "KT플라자 서현역점",
+    "address": "경기도 성남시 분당구 분당로53번길 21",
+    "lat": 37.384684,
+    "lng": 127.122394,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-167",
+    "carrier": "KT",
+    "store_name": "KT플라자 서울대점",
+    "address": "서울특별시 관악구 관악로 198, 1층",
+    "lat": 37.482538,
+    "lng": 126.953976,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-166",
+    "carrier": "KT",
+    "store_name": "KT플라자 서산중앙점",
+    "address": "충청남도 서산시 시장6로 32",
+    "lat": 36.782485,
+    "lng": 126.458073,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-165",
+    "carrier": "KT",
+    "store_name": "KT플라자 서산동문점",
+    "address": "충청남도 서산시 안견로 194 (터미널타워) 1층, 101호",
+    "lat": 36.78117,
+    "lng": 126.459067,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-164",
+    "carrier": "KT",
+    "store_name": "KT플라자 상현점",
+    "address": "경기도 용인시 수지구 만현로 102",
+    "lat": 37.307302,
+    "lng": 127.084699,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-163",
+    "carrier": "KT",
+    "store_name": "KT플라자 상인롯데점",
+    "address": "대구광역시 달서구 상인서로 94, 106 ,107호",
+    "lat": 35.818365,
+    "lng": 128.540732,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-162",
+    "carrier": "KT",
+    "store_name": "KT플라자 상암애드샵점",
+    "address": "서울특별시 마포구 월드컵북로 누리꿈스퀘어 104,105호",
+    "lat": 37.579428,
+    "lng": 126.889783,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-161",
+    "carrier": "KT",
+    "store_name": "KT플라자 상봉역점",
+    "address": "서울특별시 중랑구 망우로 306 1층",
+    "lat": 37.596371,
+    "lng": 127.086437,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-160",
+    "carrier": "KT",
+    "store_name": "KT플라자 상무점",
+    "address": "광주광역시 서구 상무중앙로 71",
+    "lat": 35.153176,
+    "lng": 126.847795,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-159",
+    "carrier": "KT",
+    "store_name": "KT플라자 상남사거리점",
+    "address": "경상남도 창원시 성산구 원이대로 774, 1106-1호",
+    "lat": 35.215623,
+    "lng": 128.691729,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-158",
+    "carrier": "KT",
+    "store_name": "KT플라자 상계역점",
+    "address": "서울특별시 노원구 한글비석로20길 23-20, 1층",
+    "lat": 37.660505,
+    "lng": 127.073601,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-157",
+    "carrier": "KT",
+    "store_name": "KT플라자 삼전점",
+    "address": "서울특별시 송파구 백제고분로 204",
+    "lat": 37.503749,
+    "lng": 127.089235,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-156",
+    "carrier": "KT",
+    "store_name": "KT플라자 삼양로점",
+    "address": "서울특별시 강북구 솔샘로 260",
+    "lat": 37.619207,
+    "lng": 127.021422,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-155",
+    "carrier": "KT",
+    "store_name": "KT플라자 삼산점",
+    "address": "울산광역시 남구 삼산로 277",
+    "lat": 35.539632,
+    "lng": 129.33743,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-154",
+    "carrier": "KT",
+    "store_name": "KT플라자 삼계점",
+    "address": "경상남도 창원시 마산회원구 내서읍 삼계로 7",
+    "lat": 35.231884,
+    "lng": 128.504071,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-153",
+    "carrier": "KT",
+    "store_name": "KT플라자 산본점",
+    "address": "경기도 군포시 산본로323번길 16-14, A동 101호",
+    "lat": 37.359678,
+    "lng": 126.932045,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-152",
+    "carrier": "KT",
+    "store_name": "KT플라자 사직종합운동장점",
+    "address": "부산광역시 연제구 아시아드대로 91 대방빌딩",
+    "lat": 35.192719,
+    "lng": 129.066646,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-151",
+    "carrier": "KT",
+    "store_name": "KT플라자 사우점",
+    "address": "경기도 김포시 사우중로 88",
+    "lat": 37.622152,
+    "lng": 126.721517,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-150",
+    "carrier": "KT",
+    "store_name": "KT플라자 사당점",
+    "address": "서울특별시 서초구 동작대로 22 삼미빌딩",
+    "lat": 37.478397,
+    "lng": 126.982203,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-149",
+    "carrier": "KT",
+    "store_name": "KT플라자 불당점",
+    "address": "충청남도 천안시 서북구 불당21로 71, 정석프라자 1층",
+    "lat": 36.812963,
+    "lng": 127.108176,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-148",
+    "carrier": "KT",
+    "store_name": "KT플라자 부평문화거리점",
+    "address": "인천광역시 부평구 부평대로12번길 17, 102호",
+    "lat": 37.492469,
+    "lng": 126.724284,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-147",
+    "carrier": "KT",
+    "store_name": "KT플라자 부천역점",
+    "address": "경기 부천시 원미구 부천로 16",
+    "lat": 37.485612,
+    "lng": 126.783271,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-146",
+    "carrier": "KT",
+    "store_name": "KT플라자 부천상동점",
+    "address": "경기도 부천시 원미구 상동로 90, 107호",
+    "lat": 37.505125,
+    "lng": 126.75372,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-145",
+    "carrier": "KT",
+    "store_name": "KT플라자 봉선중앙점",
+    "address": "광주광역시 남구 봉선로 158번지 남양빌딩 107호",
+    "lat": 35.122729,
+    "lng": 126.912371,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-144",
+    "carrier": "KT",
+    "store_name": "KT플라자 본오점",
+    "address": "경기도 안산시 상록구 샘골로 120, 1층",
+    "lat": 37.294541,
+    "lng": 126.863245,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-143",
+    "carrier": "KT",
+    "store_name": "KT플라자 보정점",
+    "address": "경기도 용인시 기흥구 죽전로 39, 113/114호",
+    "lat": 37.320732,
+    "lng": 127.113128,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-142",
+    "carrier": "KT",
+    "store_name": "KT플라자 범계점",
+    "address": "경기도 안양시 동안구 시민대로 161, 무역센터빌딩 109~110호",
+    "lat": 37.390498,
+    "lng": 126.949186,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-141",
+    "carrier": "KT",
+    "store_name": "KT플라자 백운광장점",
+    "address": "광주광역시 남구 회재로 1261",
+    "lat": 35.134863,
+    "lng": 126.898488,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-140",
+    "carrier": "KT",
+    "store_name": "KT플라자 반림점",
+    "address": "경상남도 창원시 성산구 반송로 144",
+    "lat": 35.236054,
+    "lng": 128.67108,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-139",
+    "carrier": "KT",
+    "store_name": "KT플라자 미사역점",
+    "address": "경기도 하남시 망월동 1121-2 미사랑데르3 108,109호",
+    "lat": 37.561082,
+    "lng": 127.193298,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-138",
+    "carrier": "KT",
+    "store_name": "KT플라자 문화점",
+    "address": "대전광역시 중구 계백로 1686번길 16",
+    "lat": 36.319745,
+    "lng": 127.407122,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-137",
+    "carrier": "KT",
+    "store_name": "KT플라자 문정로점",
+    "address": "대전광역시 서구 문정로 96",
+    "lat": 36.346433,
+    "lng": 127.389904,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-136",
+    "carrier": "KT",
+    "store_name": "KT플라자 문산점",
+    "address": "경기도 파주시 문산읍 문향로 66-1",
+    "lat": 37.857755,
+    "lng": 126.785316,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-135",
+    "carrier": "KT",
+    "store_name": "KT플라자 목포역점",
+    "address": "전라남도 목포시 영산로 95",
+    "lat": 34.791073,
+    "lng": 126.385633,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-134",
+    "carrier": "KT",
+    "store_name": "KT플라자 목포상동점",
+    "address": "전라남도 목포시 비파로 60, 1층",
+    "lat": 34.803887,
+    "lng": 126.426554,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-133",
+    "carrier": "KT",
+    "store_name": "KT플라자 목동역점",
+    "address": "서울특별시 양천구 목동로 201, 1층",
+    "lat": 37.526459,
+    "lng": 126.863932,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-132",
+    "carrier": "KT",
+    "store_name": "KT플라자 모래내점",
+    "address": "인천광역시 남동구 구월로 272 파크빌딩 1층",
+    "lat": 37.455585,
+    "lng": 126.720704,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-131",
+    "carrier": "KT",
+    "store_name": "KT플라자 모란점",
+    "address": "경기도 성남시 중원구 성남대로 1142, 1층",
+    "lat": 37.43166,
+    "lng": 127.129595,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-130",
+    "carrier": "KT",
+    "store_name": "KT플라자 명지대사거리점",
+    "address": "서울특별시 서대문구 증가로 144",
+    "lat": 37.577759,
+    "lng": 126.921619,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-129",
+    "carrier": "KT",
+    "store_name": "KT플라자 명지국제신도시점",
+    "address": "부산광역시 강서구 명지국제8로 246 108호",
+    "lat": 35.097739,
+    "lng": 128.91962,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-128",
+    "carrier": "KT",
+    "store_name": "KT플라자 면목역점",
+    "address": "서울특별시 중랑구 면목로 422",
+    "lat": 37.58961,
+    "lng": 127.087704,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-127",
+    "carrier": "KT",
+    "store_name": "KT플라자 먹골역점",
+    "address": "서울특별시 중랑구 동일로890 1층",
+    "lat": 37.609915,
+    "lng": 127.078189,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-126",
+    "carrier": "KT",
+    "store_name": "KT플라자 만남로점",
+    "address": "충청남도 천안시 동남구 만남로 28, 103호",
+    "lat": 36.818549,
+    "lng": 127.155258,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-125",
+    "carrier": "KT",
+    "store_name": "KT플라자 마두역점",
+    "address": "경기도 고양시 일산동구 중앙로 1192 월드프라자 1층 1,2호",
+    "lat": 37.653236,
+    "lng": 126.777492,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-124",
+    "carrier": "KT",
+    "store_name": "KT플라자 마곡나루역점",
+    "address": "서울특별시 강서구 마곡중앙5로 1길 20 마곡나루역보타닉비즈타워 1층",
+    "lat": 37.568666,
+    "lng": 126.826712,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-123",
+    "carrier": "KT",
+    "store_name": "KT플라자 둔촌역점",
+    "address": "서울특별시 강동구 양재대로 1360(둔촌동), 포레온스테이션5 상가 1024호",
+    "lat": 37.527476,
+    "lng": 127.137046,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-122",
+    "carrier": "KT",
+    "store_name": "KT플라자 둔산타임월드점",
+    "address": "대전광역시 서구 대덕대로 223",
+    "lat": 36.352908,
+    "lng": 127.37884,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-121",
+    "carrier": "KT",
+    "store_name": "KT플라자 동해천곡점",
+    "address": "강원도 동해시 중앙로 235 유성빌딩 102호",
+    "lat": 37.521825,
+    "lng": 129.113906,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-120",
+    "carrier": "KT",
+    "store_name": "KT플라자 동탄호수공원점",
+    "address": "경기도 화성시 동탄순환대로 127-17 우성메디피아 115, 116호",
+    "lat": 37.167001,
+    "lng": 127.107268,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-119",
+    "carrier": "KT",
+    "store_name": "KT플라자 동탄역점",
+    "address": "경기도 화성시 동탄대로 489 우성KTX타워 115,116호",
+    "lat": 37.197359,
+    "lng": 127.098264,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-118",
+    "carrier": "KT",
+    "store_name": "KT플라자 동탄센트럴파크점",
+    "address": "경기도 화성시 동탄지성로 104",
+    "lat": 37.208343,
+    "lng": 127.063882,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-117",
+    "carrier": "KT",
+    "store_name": "KT플라자 동탄나루마을점",
+    "address": "경기도 화성시 동탄솔빛로 68 계림개발 101호",
+    "lat": 37.194424,
+    "lng": 127.074935,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-116",
+    "carrier": "KT",
+    "store_name": "KT플라자 동천점",
+    "address": "대구광역시 북구 학정로 415 1층",
+    "lat": 35.941846,
+    "lng": 128.562984,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-115",
+    "carrier": "KT",
+    "store_name": "KT플라자 동성로점",
+    "address": "대구광역시 중구 동성로 2",
+    "lat": 35.867176,
+    "lng": 128.594045,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-114",
+    "carrier": "KT",
+    "store_name": "KT플라자 동대신점",
+    "address": "부산광역시 서구 구덕로 320",
+    "lat": 35.112389,
+    "lng": 129.016776,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-113",
+    "carrier": "KT",
+    "store_name": "KT플라자 동구청점",
+    "address": "대구광역시 동구 아양로 199",
+    "lat": 35.8861,
+    "lng": 128.634676,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-112",
+    "carrier": "KT",
+    "store_name": "KT플라자 동광양점",
+    "address": "전라남도 광양시 광장로 142",
+    "lat": 34.936668,
+    "lng": 127.695291,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-111",
+    "carrier": "KT",
+    "store_name": "KT플라자 독산씨티렉스점",
+    "address": "서울 금천구 시흥대로 399, 128호",
+    "lat": 37.469359,
+    "lng": 126.897002,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-110",
+    "carrier": "KT",
+    "store_name": "KT플라자 독립문역점",
+    "address": "서울특별시 종로구 송월길 99 경복궁자이2단지 상가동 1층 2128호",
+    "lat": 37.570861,
+    "lng": 126.962352,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-109",
+    "carrier": "KT",
+    "store_name": "KT플라자 도농로점",
+    "address": "경기도 남양주시 도농로 29 부영프라자 1층 102호",
+    "lat": 37.608426,
+    "lng": 127.156811,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-106",
+    "carrier": "KT",
+    "store_name": "KT플라자 대천중앙로점",
+    "address": "충청남도 보령시 중앙로 101",
+    "lat": 36.351273,
+    "lng": 126.593338,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-105",
+    "carrier": "KT",
+    "store_name": "KT플라자 대천점",
+    "address": "충청남도 보령시 상설시장길 29",
+    "lat": 36.350489,
+    "lng": 126.595683,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-104",
+    "carrier": "KT",
+    "store_name": "KT플라자 대림역점",
+    "address": "서울특별시 영등포구 도림로 135 건설스마트빌딩 102호",
+    "lat": 37.493232,
+    "lng": 126.89686,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-103",
+    "carrier": "KT",
+    "store_name": "KT플라자 대구은행역점",
+    "address": "대구광역시 수성구 달구벌대로 2280",
+    "lat": 35.85973,
+    "lng": 128.611648,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-102",
+    "carrier": "KT",
+    "store_name": "KT플라자 당진중앙점",
+    "address": "충청남도 당진시 당진중앙2로 103-8 진원스타타워 109호",
+    "lat": 36.894528,
+    "lng": 126.630519,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-101",
+    "carrier": "KT",
+    "store_name": "KT플라자 당산점",
+    "address": "서울특별시 영등포구 양평로 52",
+    "lat": 37.534656,
+    "lng": 126.900875,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-99",
+    "carrier": "KT",
+    "store_name": "KT플라자 노형점",
+    "address": "제주특별자치도 제주시 월랑로 40, 1층",
+    "lat": 33.489178,
+    "lng": 126.47608,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-98",
+    "carrier": "KT",
+    "store_name": "KT플라자 노형드림점",
+    "address": "제주특별자치도 제주시 도령로 7, 1층",
+    "lat": 33.48667,
+    "lng": 126.48011,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-97",
+    "carrier": "KT",
+    "store_name": "KT플라자 노은점",
+    "address": "대전광역시 유성구 은구비남로33번길 5, 114~115호",
+    "lat": 36.372533,
+    "lng": 127.318987,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-95",
+    "carrier": "KT",
+    "store_name": "KT플라자 노량진점",
+    "address": "서울특별시 동작구 노량진로 162, 1층",
+    "lat": 37.513407,
+    "lng": 126.943958,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-94",
+    "carrier": "KT",
+    "store_name": "KT플라자 남악점",
+    "address": "전라남도 무안군 삼향읍 대죽서로15번길 38",
+    "lat": 34.812663,
+    "lng": 126.461256,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-93",
+    "carrier": "KT",
+    "store_name": "KT플라자 나운점",
+    "address": "전북특별자치도 군산시 대학로 269",
+    "lat": 35.969031,
+    "lng": 126.697384,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-92",
+    "carrier": "KT",
+    "store_name": "KT플라자 까치산역점",
+    "address": "서울특별시 강서구 강서로 47",
+    "lat": 37.531961,
+    "lng": 126.846339,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-91",
+    "carrier": "KT",
+    "store_name": "KT플라자 김해외동점",
+    "address": "경상남도 김해시 함박로 102",
+    "lat": 35.232105,
+    "lng": 128.864533,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-90",
+    "carrier": "KT",
+    "store_name": "KT플라자 김해삼계점",
+    "address": "경상남도 김해시 삼계중앙로 31 102호",
+    "lat": 35.260737,
+    "lng": 128.86831,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-89",
+    "carrier": "KT",
+    "store_name": "KT플라자 김천중앙점",
+    "address": "경상북도 김천시 시청로 65",
+    "lat": 36.134109,
+    "lng": 128.117297,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-88",
+    "carrier": "KT",
+    "store_name": "KT플라자 김천역점",
+    "address": "경상북도 김천시 김천로 108",
+    "lat": 36.123416,
+    "lng": 128.113593,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-87",
+    "carrier": "KT",
+    "store_name": "KT플라자 김량장점",
+    "address": "경기도 용인시 처인구 금령로 96, 1층",
+    "lat": 37.235383,
+    "lng": 127.206836,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-86",
+    "carrier": "KT",
+    "store_name": "KT플라자 길동사거리점",
+    "address": "서울특별시 강동구 천호대로 1128, 105,106호",
+    "lat": 37.534163,
+    "lng": 127.13652,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-85",
+    "carrier": "KT",
+    "store_name": "KT플라자 금호동점",
+    "address": "서울특별시 성동구 독서당로 302 대도프라자",
+    "lat": 37.547611,
+    "lng": 127.022731,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-84",
+    "carrier": "KT",
+    "store_name": "KT플라자 금릉역점",
+    "address": "경기도 파주시 금빛로 24-17 월드프라자 1층",
+    "lat": 37.751988,
+    "lng": 126.767633,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-83",
+    "carrier": "KT",
+    "store_name": "KT플라자 구파발점",
+    "address": "서울특별시 은평구 진관2로 19 휴먼프라자 1층 103호",
+    "lat": 37.634854,
+    "lng": 126.919585,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-82",
+    "carrier": "KT",
+    "store_name": "KT플라자 구월점",
+    "address": "인천광역시 남동구 인하로489번길 28, 101호",
+    "lat": 37.444848,
+    "lng": 126.701481,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-81",
+    "carrier": "KT",
+    "store_name": "KT플라자 구영로점",
+    "address": "울산광역시 울주군 범서읍 구영로 94 엠_프라자 1층 103호",
+    "lat": 35.574109,
+    "lng": 129.241285,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-80",
+    "carrier": "KT",
+    "store_name": "KT플라자 구서역점",
+    "address": "부산광역시 금정구 구서로 10",
+    "lat": 35.246867,
+    "lng": 129.090124,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-78",
+    "carrier": "KT",
+    "store_name": "KT플라자 구미인동점",
+    "address": "경상북도 구미시 인동가산로 33",
+    "lat": 36.106274,
+    "lng": 128.419954,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-77",
+    "carrier": "KT",
+    "store_name": "KT플라자 구미옥계점",
+    "address": "경상북도 구미시 옥계북로 27 101,102호",
+    "lat": 36.138566,
+    "lng": 128.420771,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-76",
+    "carrier": "KT",
+    "store_name": "KT플라자 구미역점",
+    "address": "경상북도 구미시 구미중앙로 79-1",
+    "lat": 36.129115,
+    "lng": 128.331604,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-75",
+    "carrier": "KT",
+    "store_name": "KT플라자 구리리맥스점",
+    "address": "경기도 구리시 경춘로 239 리맥스빌딩 1층",
+    "lat": 37.601629,
+    "lng": 127.141642,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-74",
+    "carrier": "KT",
+    "store_name": "KT플라자 구로디지털점",
+    "address": "서울특별시 구로구 디지털로34길 55, 112호",
+    "lat": 37.484286,
+    "lng": 126.899282,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-73",
+    "carrier": "KT",
+    "store_name": "KT플라자 구래점",
+    "address": "경기도 김포시 김포한강9로 95 센터프라자 116호",
+    "lat": 37.645155,
+    "lng": 126.62559,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-72",
+    "carrier": "KT",
+    "store_name": "KT플라자 교대역점",
+    "address": "서울특별시 서초구 서초대로 286 서초프라자 103호",
+    "lat": 37.493174,
+    "lng": 127.013037,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-71",
+    "carrier": "KT",
+    "store_name": "KT플라자 광화문중앙점",
+    "address": "서울특별시 종로구 새문안로9길 25 1층",
+    "lat": 37.571351,
+    "lng": 126.975482,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-70",
+    "carrier": "KT",
+    "store_name": "KT플라자 광주양산점",
+    "address": "광주광역시 북구 양산로 55 나운빌딩 1층",
+    "lat": 35.210499,
+    "lng": 126.880437,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-69",
+    "carrier": "KT",
+    "store_name": "KT플라자 광산점",
+    "address": "광주광역시 광산구 임방울대로 342",
+    "lat": 35.190384,
+    "lng": 126.824326,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-68",
+    "carrier": "KT",
+    "store_name": "KT플라자 광복점",
+    "address": "부산광역시 중구 광복로 54-2, 1층",
+    "lat": 35.099114,
+    "lng": 129.031015,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-67",
+    "carrier": "KT",
+    "store_name": "KT플라자 광명점",
+    "address": "경기도 광명시 광명로 898, 103호",
+    "lat": 37.479055,
+    "lng": 126.854608,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-66",
+    "carrier": "KT",
+    "store_name": "KT플라자 광교상현역점",
+    "address": "경기도 용인시 수지구 광교중앙로 311 희성빌딩 103,104호",
+    "lat": 37.29782,
+    "lng": 127.068914,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-65",
+    "carrier": "KT",
+    "store_name": "KT플라자 관평점",
+    "address": "대전광역시 유성구 테크노중앙로 40",
+    "lat": 36.426594,
+    "lng": 127.389927,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-64",
+    "carrier": "KT",
+    "store_name": "KT플라자 관저중로점",
+    "address": "대전광역시 서구 관저중로 98 7호, 7-1호",
+    "lat": 36.300908,
+    "lng": 127.335415,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-63",
+    "carrier": "KT",
+    "store_name": "KT플라자 과천점",
+    "address": "경기도 과천시 중앙로 131(중앙동) 현대빌딩 1층",
+    "lat": 37.428343,
+    "lng": 126.991341,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-62",
+    "carrier": "KT",
+    "store_name": "KT플라자 공주대점",
+    "address": "충청남도 공주시 공주대학로 98, 103-104호",
+    "lat": 36.473723,
+    "lng": 127.137867,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-61",
+    "carrier": "KT",
+    "store_name": "KT플라자 고현점",
+    "address": "경상남도 거제시 거제중앙로 1891",
+    "lat": 34.886962,
+    "lng": 128.623599,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-60",
+    "carrier": "KT",
+    "store_name": "KT플라자 경주황성점",
+    "address": "경상북도 경주시 황성로 21",
+    "lat": 35.865148,
+    "lng": 129.213882,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-59",
+    "carrier": "KT",
+    "store_name": "KT플라자 경주중앙점",
+    "address": "경상북도 경주시 화랑로 118",
+    "lat": 35.844311,
+    "lng": 129.21367,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-58",
+    "carrier": "KT",
+    "store_name": "KT플라자 건대입구역점",
+    "address": "서울특별시 광진구 능동로 111, 1층",
+    "lat": 37.541063,
+    "lng": 127.070859,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-57",
+    "carrier": "KT",
+    "store_name": "KT플라자 강릉임당점",
+    "address": "강원도 강릉시 경강로 2102 106호",
+    "lat": 37.754953,
+    "lng": 128.896936,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-56",
+    "carrier": "KT",
+    "store_name": "KT플라자 강남역점",
+    "address": "서울특별시 강남구 테헤란로 120, 상경빌딩 1층",
+    "lat": 37.498589,
+    "lng": 127.030857,
+    "store_type": "KT플라자",
+    "global_store": true
+  },
+  {
+    "store_id": "KT-55",
+    "carrier": "KT",
+    "store_name": "KT플라자 강남대로점",
+    "address": "서울특별시 서초구 강남대로 359 대우 도시에빛 101호",
+    "lat": 37.494799,
+    "lng": 127.02861,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-54",
+    "carrier": "KT",
+    "store_name": "KT플라자 가좌점",
+    "address": "인천광역시 서구 건지로 402",
+    "lat": 37.495266,
+    "lng": 126.684407,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-53",
+    "carrier": "KT",
+    "store_name": "KT플라자 가오점",
+    "address": "대전광역시 동구 동구청로 95, 101, 102호",
+    "lat": 36.306507,
+    "lng": 127.456739,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-52",
+    "carrier": "KT",
+    "store_name": "KT플라자 가양역점",
+    "address": "서울특별시 강서구 양천로 460",
+    "lat": 37.562585,
+    "lng": 126.8517,
+    "store_type": "KT플라자",
+    "global_store": false
+  },
+  {
+    "store_id": "KT-51",
+    "carrier": "KT",
+    "store_name": "KT플라자 가경점",
+    "address": "충청북도 청주시 흥덕구 풍산로 18, 터미널타워 1층 105호",
+    "lat": 36.625857,
+    "lng": 127.432824,
+    "store_type": "KT플라자",
+    "global_store": false
+  }
+]

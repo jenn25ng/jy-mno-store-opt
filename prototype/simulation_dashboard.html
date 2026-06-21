@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>매장수 최적화 시뮬레이션 — SKT 유통혁신팀</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 900px; min-height: 900px; }
+body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+.header {
+  background: linear-gradient(135deg, #E51937 0%, #b01228 100%);
+  color: white; padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.header h1 { font-size: 18px; font-weight: 700; }
+.header .subtitle { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+.badge-sample {
+  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+  padding: 4px 10px; border-radius: 20px; font-size: 11px;
+}
+
+.main { display: grid; grid-template-columns: 340px 1fr; gap: 0; height: calc(100vh - 60px); }
+
+/* LEFT PANEL */
+.left-panel { background: white; overflow-y: auto; border-right: 1px solid #e5e7eb; }
+
+.section-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #f3f4f6;
+  position: sticky; top: 0; background: white; z-index: 10;
+}
+.section-title { font-size: 13px; font-weight: 700; color: #374151; }
+.section-meta { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+/* KPI STRIP */
+.kpi-strip {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: #e5e7eb; border-bottom: 1px solid #e5e7eb;
+}
+.kpi-cell {
+  background: white; padding: 12px; text-align: center;
+}
+.kpi-num { font-size: 22px; font-weight: 800; color: #E51937; }
+.kpi-label { font-size: 10px; color: #6b7280; margin-top: 2px; }
+
+/* TABS */
+.tabs { display: flex; border-bottom: 2px solid #e5e7eb; }
+.tab {
+  flex: 1; padding: 10px 8px; text-align: center;
+  font-size: 12px; cursor: pointer; color: #6b7280;
+  border-bottom: 2px solid transparent; margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.tab.active { color: #E51937; border-bottom-color: #E51937; font-weight: 700; }
+
+/* STORE CARDS */
+.store-list { padding: 8px; }
+.store-card {
+  border: 1px solid #e5e7eb; border-radius: 10px;
+  padding: 12px; margin-bottom: 8px; cursor: pointer;
+  transition: all 0.15s; background: white;
+}
+.store-card:hover { border-color: #E51937; box-shadow: 0 2px 8px rgba(229,25,55,0.15); }
+.store-card.selected { border-color: #E51937; background: #fff5f6; }
+.store-card.candidate { border-left: 3px solid #ef4444; }
+
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.card-name { font-size: 13px; font-weight: 700; }
+.card-zone { font-size: 11px; color: #6b7280; margin-top: 1px; }
+.signal-count {
+  background: #ef4444; color: white;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; flex-shrink: 0;
+}
+
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+.metric { background: #f9fafb; border-radius: 6px; padding: 5px 6px; text-align: center; }
+.metric-val { font-size: 12px; font-weight: 700; }
+.metric-val.neg { color: #ef4444; }
+.metric-val.pos { color: #10b981; }
+.metric-label { font-size: 9px; color: #9ca3af; }
+
+.signals-list { }
+.signal-item {
+  display: flex; gap: 4px; align-items: flex-start;
+  font-size: 10px; color: #374151; margin-bottom: 3px; line-height: 1.4;
+}
+.signal-dot { width: 5px; height: 5px; border-radius: 50%; background: #ef4444; flex-shrink: 0; margin-top: 4px; }
+
+.layer-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 10px;
+  margin-right: 3px;
+}
+.badge-l1 { background: #ede9fe; color: #7c3aed; }
+.badge-l2 { background: #fef3c7; color: #d97706; }
+.badge-l3 { background: #d1fae5; color: #059669; }
+
+/* RIGHT: MAP */
+.right-panel { position: relative; }
+#map { width: 100%; height: 100%; }
+
+/* MAP OVERLAY */
+.map-legend {
+  position: absolute; bottom: 20px; left: 10px; z-index: 1000;
+  background: white; border-radius: 10px; padding: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15); font-size: 11px; min-width: 160px;
+}
+.legend-title { font-weight: 700; margin-bottom: 8px; font-size: 12px; }
+.legend-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-ring { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #f59e0b; background: rgba(245,158,11,0.1); flex-shrink: 0; }
+
+/* DETAIL PANEL */
+.detail-overlay {
+  position: absolute; top: 10px; right: 10px; z-index: 1000;
+  background: white; border-radius: 12px; padding: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2); width: 280px;
+  display: none;
+}
+.detail-overlay.show { display: block; }
+.detail-close { position: absolute; top: 10px; right: 12px; cursor: pointer; color: #9ca3af; font-size: 16px; }
+.detail-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+.detail-meta { font-size: 11px; color: #6b7280; margin-bottom: 12px; }
+.detail-section { margin-bottom: 10px; }
+.detail-section-title { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 5px; }
+.huff-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #f3f4f6; }
+
+/* LAYER PIPELINE VIZ */
+.pipeline-bar {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; display: flex; gap: 0; background: white;
+  border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  overflow: hidden; font-size: 11px;
+}
+.pipe-step {
+  padding: 7px 14px; display: flex; align-items: center; gap: 5px;
+  cursor: pointer; transition: background 0.15s;
+}
+.pipe-step:not(:last-child) { border-right: 1px solid #e5e7eb; }
+.pipe-step.active { background: #E51937; color: white; }
+.pipe-step:not(.active):hover { background: #f9fafb; }
+.pipe-icon { font-size: 13px; }
+
+/* ALL STORES MODE */
+.all-stores-mode .store-card { border-left: 3px solid #6b7280; }
+.all-stores-mode .store-card.skt { border-left-color: #E51937; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="h1">🗺️ 매장수 최적화 시뮬레이션</div>
+    <div class="subtitle">SKT 유통혁신팀 | 4-Layer AI 분석 파이프라인</div>
+  </div>
+  <div class="badge-sample">⚠️ 시뮬레이션 데이터 (위치 실좌표, 성능 합성)</div>
+</div>
+
+<div class="main">
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="kpi-strip" id="kpiStrip"></div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('candidates')">🚨 폐점 후보</div>
+      <div class="tab" onclick="switchTab('clusters')">📍 과밀 클러스터</div>
+      <div class="tab" onclick="switchTab('all')">전체 매장</div>
+    </div>
+
+    <div id="storeList" class="store-list"></div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div id="map"></div>
+
+    <div class="pipeline-bar">
+      <div class="pipe-step active" id="pipe1" onclick="setPipeLayer(1)">
+        <span class="pipe-icon">📍</span> L1 DBSCAN
+      </div>
+      <div class="pipe-step" id="pipe2" onclick="setPipeLayer(2)">
+        <span class="pipe-icon">🔍</span> L2 이상탐지
+      </div>
+      <div class="pipe-step" id="pipe3" onclick="setPipeLayer(3)">
+        <span class="pipe-icon">🔄</span> L3 Huff 시뮬
+      </div>
+      <div class="pipe-step" id="pipe4" onclick="setPipeLayer(4)">
+        <span class="pipe-icon">💡</span> L4 종합
+      </div>
+    </div>
+
+    <div class="map-legend" id="mapLegend"></div>
+
+    <div class="detail-overlay" id="detailPanel">
+      <span class="detail-close" onclick="closeDetail()">✕</span>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let DATA = null;
+let map = null;
+let markers = [];
+let clusterCircles = [];
+let currentLayer = 1;
+let currentTab = 'candidates';
+let selectedStoreId = null;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+async function init() {
+  map = L.map('map', { zoomControl: true }).setView([37.5665, 126.9780], 11);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CartoDB', maxZoom: 18
+  }).addTo(map);
+
+  try {
+    const resp = await fetch('simulation_results.json');
+    DATA = await resp.json();
+    renderKPIs();
+    renderStoreList();
+    renderMap();
+    renderLegend();
+  } catch(e) {
+    document.getElementById('storeList').innerHTML =
+      '<div style="padding:20px;color:#ef4444;font-size:13px;">❌ simulation_results.json 로드 실패<br>python3 simulation.py 실행 후 다시 시도</div>';
+  }
+}
+
+// ─── KPI ─────────────────────────────────────────────────────────────────
+function renderKPIs() {
+  const s = DATA.summary;
+  const candidates = DATA.closure_candidates;
+  const monthlyLoss = candidates.reduce((sum, c) =>
+    sum + (c.monthly_profit_krw < 0 ? Math.abs(c.monthly_profit_krw) : 0), 0);
+
+  document.getElementById('kpiStrip').innerHTML = `
+    <div class="kpi-cell">
+      <div class="kpi-num">${s.total_skt}</div>
+      <div class="kpi-label">SKT 매장 수</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num">${s.overcrowded_clusters}</div>
+      <div class="kpi-label">과밀 클러스터</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num">${s.closure_candidates}</div>
+      <div class="kpi-label">복수신호 후보</div>
+    </div>
+  `;
+}
+
+// ─── TAB ─────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['candidates','clusters','all'][i] === tab);
+  });
+  renderStoreList();
+  renderMap();
+}
+
+// ─── STORE LIST ──────────────────────────────────────────────────────────
+function renderStoreList() {
+  const list = document.getElementById('storeList');
+
+  if (currentTab === 'candidates') {
+    const items = DATA.closure_candidates;
+    if (!items.length) {
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:#9ca3af;font-size:13px;">복수 신호 매장 없음</div>';
+      return;
+    }
+    list.innerHTML = items.map(c => candidateCard(c)).join('');
+
+  } else if (currentTab === 'clusters') {
+    // Group overcrowded stores by cluster
+    const skt = DATA.all_stores.filter(s => s.carrier === 'SKT' && s.is_overcrowded);
+    const byCluster = {};
+    skt.forEach(s => {
+      const k = s.dbscan_cluster;
+      if (!byCluster[k]) byCluster[k] = [];
+      byCluster[k].push(s);
+    });
+    list.innerHTML = Object.entries(byCluster).map(([cid, stores]) => `
+      <div style="margin-bottom:12px;">
+        <div style="font-size:11px;font-weight:700;color:#7c3aed;padding:8px 12px 4px;display:flex;align-items:center;gap:6px;">
+          <span style="background:#ede9fe;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;">${stores.length}</span>
+          클러스터 ${cid} — 반경 800m 내 ${stores.length}개 SKT 매장
+        </div>
+        ${stores.map(s => miniCard(s)).join('')}
+      </div>
+    `).join('');
+
+  } else {
+    const skt = DATA.all_stores.filter(s => s.carrier === 'SKT');
+    list.innerHTML = skt.map(s => miniCard(s)).join('');
+  }
+}
+
+function candidateCard(c) {
+  const profit = c.monthly_profit_krw;
+  const profitStr = profit < 0
+    ? `<span class="metric-val neg">-${Math.abs(profit/10000).toFixed(0)}만</span>`
+    : `<span class="metric-val pos">+${(profit/10000).toFixed(0)}만</span>`;
+
+  return `
+    <div class="store-card candidate${selectedStoreId === c.store_id ? ' selected' : ''}"
+         onclick="selectStore('${c.store_id}')">
+      <div class="card-top">
+        <div>
+          <div class="card-name">${c.store_name}</div>
+          <div class="card-zone">${c.zone}</div>
+        </div>
+        <div class="signal-count">${c.signal_count}</div>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-val">${c.monthly_subs}</div>
+          <div class="metric-label">월순증(건)</div>
+        </div>
+        <div class="metric">
+          ${profitStr}
+          <div class="metric-label">월손익(만)</div>
+        </div>
+        <div class="metric">
+          <div class="metric-val${c.ms_share < 0.38 ? ' neg' : ''}">${(c.ms_share*100).toFixed(1)}%</div>
+          <div class="metric-label">M/S</div>
+        </div>
+      </div>
+      <div class="signals-list">
+        ${c.signals.map((s,i) => `
+          <div class="signal-item">
+            <div class="signal-dot"></div>
+            <div>${s}</div>
+          </div>
+        `).join('')}
+      </div>
+      ${c.is_overcrowded ? '<span class="layer-badge badge-l1">L1 과밀</span>' : ''}
+      ${c.if_anomaly ? '<span class="layer-badge badge-l2">L2 이상</span>' : ''}
+      ${c.huff_redistribution ? '<span class="layer-badge badge-l3">L3 Huff</span>' : ''}
+    </div>
+  `;
+}
+
+function miniCard(s) {
+  const isAnomaly = s.if_anomaly;
+  const isCrowded = s.is_overcrowded;
+  return `
+    <div class="store-card${selectedStoreId === s.store_id ? ' selected' : ''}"
+         style="border-left:3px solid ${isCrowded ? '#7c3aed' : isAnomaly ? '#f59e0b' : '#d1d5db'}"
+         onclick="selectStore('${s.store_id}')">
+      <div class="card-top">
+        <div>
+          <div class="card-name" style="font-size:12px;">${s.store_name}</div>
+          <div class="card-zone">${s.zone}</div>
+        </div>
+        <div style="font-size:10px;color:#9ca3af;text-align:right;">
+          ${isCrowded ? '<div style="color:#7c3aed">과밀</div>' : ''}
+          ${isAnomaly ? '<div style="color:#f59e0b">이상</div>' : ''}
+        </div>
+      </div>
+      ${s.monthly_subs ? `<div style="font-size:11px;color:#6b7280;">월순증 ${s.monthly_subs}건 | M/S ${(s.ms_share*100).toFixed(1)}%</div>` : ''}
+    </div>
+  `;
+}
+
+// ─── MAP ─────────────────────────────────────────────────────────────────
+function renderMap() {
+  // Clear
+  markers.forEach(m => map.removeLayer(m));
+  clusterCircles.forEach(c => map.removeLayer(c));
+  markers = [];
+  clusterCircles = [];
+
+  const all = DATA.all_stores;
+  const candidates = new Set(DATA.closure_candidates.map(c => c.store_id));
+
+  all.forEach(store => {
+    let color, radius, opacity;
+    if (store.carrier === 'SKT') {
+      if (candidates.has(store.store_id)) {
+        color = '#ef4444'; radius = 10; opacity = 1;
+      } else if (store.is_overcrowded) {
+        color = '#7c3aed'; radius = 7; opacity = 0.85;
+      } else if (store.if_anomaly) {
+        color = '#f59e0b'; radius = 7; opacity = 0.85;
+      } else {
+        color = '#E51937'; radius = 6; opacity = 0.6;
+      }
+    } else if (store.carrier === 'KT') {
+      color = '#3b82f6'; radius = 5; opacity = 0.5;
+    } else {
+      color = '#10b981'; radius = 5; opacity = 0.5;
+    }
+
+    const m = L.circleMarker([store.lat, store.lng], {
+      radius,
+      fillColor: color,
+      color: candidates.has(store.store_id) ? '#fff' : color,
+      weight: candidates.has(store.store_id) ? 2 : 1,
+      fillOpacity: opacity,
+    }).addTo(map);
+
+    m.on('click', () => selectStore(store.store_id));
+    m.bindTooltip(
+      `<b>${store.store_name}</b>${store.monthly_subs ? `<br>월순증 ${store.monthly_subs}건` : ''}`,
+      { permanent: false, direction: 'top' }
+    );
+    markers.push(m);
+    store._marker = m;
+  });
+
+  // DBSCAN cluster circles
+  if (currentLayer >= 1) {
+    const skt = all.filter(s => s.carrier === 'SKT' && s.is_overcrowded);
+    const byCluster = {};
+    skt.forEach(s => {
+      if (!byCluster[s.dbscan_cluster]) byCluster[s.dbscan_cluster] = [];
+      byCluster[s.dbscan_cluster].push(s);
+    });
+
+    Object.values(byCluster).forEach(stores => {
+      const avgLat = stores.reduce((a, s) => a + s.lat, 0) / stores.length;
+      const avgLng = stores.reduce((a, s) => a + s.lng, 0) / stores.length;
+      const c = L.circle([avgLat, avgLng], {
+        radius: 800,
+        color: '#7c3aed', fillColor: '#7c3aed',
+        fillOpacity: 0.06, weight: 1.5, dashArray: '5,5'
+      }).addTo(map);
+      clusterCircles.push(c);
+    });
+  }
+}
+
+function selectStore(storeId) {
+  selectedStoreId = storeId;
+  renderStoreList();
+
+  const store = DATA.all_stores.find(s => s.store_id === storeId);
+  const candidate = DATA.closure_candidates.find(c => c.store_id === storeId);
+
+  if (store) {
+    map.flyTo([store.lat, store.lng], 14, { duration: 0.8 });
+  }
+
+  showDetail(store, candidate);
+}
+
+function showDetail(store, candidate) {
+  const panel = document.getElementById('detailPanel');
+  const content = document.getElementById('detailContent');
+
+  if (!store) { panel.classList.remove('show'); return; }
+
+  const profit = store.monthly_profit_krw;
+  const profitStr = profit
+    ? (profit < 0 ? `<span style="color:#ef4444">-${Math.abs(profit/10000).toFixed(0)}만원/월</span>`
+                  : `<span style="color:#10b981">+${(profit/10000).toFixed(0)}만원/월</span>`)
+    : '-';
+
+  let huffHtml = '';
+  if (candidate?.huff_redistribution?.length) {
+    huffHtml = `
+      <div class="detail-section">
+        <div class="detail-section-title">🔄 L3 Huff — 폐점 시 수요 재배분</div>
+        <div style="font-size:11px;color:#6b7280;margin-bottom:6px;">75% 유지율 가정 (25% = ${candidate.huff_lost_subs}건 이탈)</div>
+        ${candidate.huff_redistribution.map(h => `
+          <div class="huff-row">
+            <span>${h.store_name}</span>
+            <span style="color:#6b7280">${h.distance_km}km</span>
+            <span style="font-weight:700;color:#059669">+${h.absorbed_subs}건</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  content.innerHTML = `
+    <div class="detail-name">${store.store_name}</div>
+    <div class="detail-meta">${store.zone} · ${store.zone_type === 'premium' ? '프리미엄 상권' : store.zone_type === 'high' ? '주요 상권' : '일반 상권'}</div>
+
+    ${store.monthly_subs ? `
+    <div class="detail-section">
+      <div class="detail-section-title">📊 성능 지표</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
+        <div><b>월 순증</b><br>${store.monthly_subs}건</div>
+        <div><b>월 손익</b><br>${profitStr}</div>
+        <div><b>M/S</b><br>${(store.ms_share*100).toFixed(1)}%</div>
+        <div><b>유동인구</b><br>${store.foot_traffic_score}점</div>
+      </div>
+    </div>
+    ` : ''}
+
+    ${store.is_overcrowded ? `
+    <div class="detail-section">
+      <div class="detail-section-title">📍 L1 DBSCAN — 과밀 감지</div>
+      <div style="font-size:12px;">클러스터 #${store.dbscan_cluster} | 반경 800m 내 동일 클러스터 매장 존재</div>
+    </div>
+    ` : ''}
+
+    ${store.if_anomaly ? `
+    <div class="detail-section">
+      <div class="detail-section-title">🔍 L2 Isolation Forest — 이상 패턴</div>
+      <div style="font-size:12px;">이상 점수: ${store.if_score} (낮을수록 더 이상)<br>
+      <span style="color:#9ca3af;font-size:10px;">※ 이상 = 즉시 폐점 아님. 검토 대상 플래그.</span></div>
+    </div>
+    ` : ''}
+
+    ${huffHtml}
+
+    ${candidate?.signals?.length ? `
+    <div class="detail-section">
+      <div class="detail-section-title">💡 L4 — 종합 신호</div>
+      ${candidate.signals.map(s => `<div style="font-size:11px;margin-bottom:4px;">• ${s}</div>`).join('')}
+    </div>
+    ` : ''}
+
+    <div style="margin-top:10px;padding:8px;background:#fef9c3;border-radius:6px;font-size:10px;color:#92400e;">
+      ⚠️ AI 신호는 참고 지표입니다. 최종 의사결정은 현장 검토 및 전략 판단 필요.
+    </div>
+  `;
+
+  panel.classList.add('show');
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('show');
+  selectedStoreId = null;
+  renderStoreList();
+}
+
+// ─── PIPELINE LAYER CONTROL ──────────────────────────────────────────────
+function setPipeLayer(n) {
+  currentLayer = n;
+  document.querySelectorAll('.pipe-step').forEach((el, i) => {
+    el.classList.toggle('active', i < n);
+  });
+
+  // Explanatory overlays per layer
+  renderLegend();
+}
+
+function renderLegend() {
+  const legends = {
+    1: `
+      <div class="legend-title">L1 — DBSCAN 과밀 탐지</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> 과밀 클러스터 SKT 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#E51937"></div> 일반 SKT 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#3b82f6"></div> KT 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#10b981"></div> LGU+ 매장</div>
+      <div style="font-size:9px;color:#9ca3af;margin-top:6px;">보라 점선 원 = 과밀 클러스터 영역</div>
+    `,
+    2: `
+      <div class="legend-title">L2 — Isolation Forest</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> 이상 패턴 탐지 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> 과밀 클러스터 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#E51937"></div> 일반 SKT 매장</div>
+    `,
+    3: `
+      <div class="legend-title">L3 — Huff 시뮬레이션</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#ef4444;width:14px;height:14px;border:2px solid white"></div> 폐점 후보 (복수신호)</div>
+      <div style="font-size:10px;color:#6b7280;margin-top:4px;">클릭 시 수요 재배분 상세 확인</div>
+    `,
+    4: `
+      <div class="legend-title">L4 — 종합 신호</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#ef4444;width:14px;height:14px;border:2px solid white"></div> 복수 신호 폐점 검토 대상</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> L1 과밀</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> L2 이상</div>
+      <div style="font-size:9px;color:#9ca3af;margin-top:6px;">신호는 참고 지표. 사람이 최종 판단.</div>
+    `,
+  };
+  document.getElementById('mapLegend').innerHTML = legends[currentLayer] || legends[4];
+}
+
+init();
+</script>
+</body>
+</html>
