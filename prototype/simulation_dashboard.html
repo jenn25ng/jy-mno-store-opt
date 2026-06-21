@@ -544,7 +544,8 @@ function renderMap() {
       const avgLng = stores.reduce((a, s) => a + s.lng, 0) / stores.length;
       const c = L.circle([avgLat, avgLng], {
         radius: 800, color: '#94a3b8', fillColor: '#94a3b8',
-        fillOpacity: 0.05, weight: 1, dashArray: '4,4'
+        fillOpacity: 0.05, weight: 1, dashArray: '4,4',
+        interactive: false  // 장식용 상권 표시 — 클릭을 흡수하지 않고 아래 매장 마커로 통과시킴
       }).addTo(map);
       clusterCircles.push(c);
     });
