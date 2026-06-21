@@ -209,6 +209,16 @@ let markers = [], clusterCircles = [];
 let currentTab = 'urgent', currentMapView = 'all';
 let selectedStoreId = null;
 
+// 동일 store_id 완전중복 제거 (LGU 원천데이터에 348건 중복 존재) — 선택 시 find() 오선택 방지
+function dedupeStores(stores) {
+  const seen = new Set();
+  return stores.filter(s => {
+    if (seen.has(s.store_id)) return false;
+    seen.add(s.store_id);
+    return true;
+  });
+}
+
 async function init() {
   map = L.map('map', { zoomControl: true }).setView([37.5665, 126.9780], 11);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -217,6 +227,7 @@ async function init() {
 
   try {
     DATA = await fetch('simulation_results.json').then(r => r.json());
+    DATA.all_stores = dedupeStores(DATA.all_stores);
     renderKPIs();
     renderStoreList();
     renderMap();
@@ -363,7 +374,13 @@ function renderMap() {
   const reviewIds = new Set(DATA.closure_candidates.filter(c => c.verdict === '조건부 검토').map(c => c.store_id));
   const candMap   = Object.fromEntries(DATA.closure_candidates.map(c => [c.store_id, c]));
 
-  DATA.all_stores.forEach(store => {
+  // 경쟁사(KT/LGU)를 먼저, SKT를 나중에 그려 SKT 마커가 항상 맨 위에 오도록 함
+  // (겹치는 위치에서 SKT 매장 클릭이 경쟁사 마커에 가로채이는 간헐적 선택 실패 방지)
+  const renderOrder = [...DATA.all_stores].sort(
+    (a, b) => (a.carrier === 'SKT' ? 1 : 0) - (b.carrier === 'SKT' ? 1 : 0)
+  );
+
+  renderOrder.forEach(store => {
     let color = '#d1d5db', radius = 5, opacity = 0.5, weight = 1, stroke = null;
 
     if (store.carrier === 'KT')  { color = '#3b82f6'; }
@@ -460,8 +477,14 @@ function selectStore(storeId) {
   selectedStoreId = storeId;
   renderStoreList();
   const store = DATA.all_stores.find(s => s.store_id === storeId);
-  if (store) map.flyTo([store.lat, store.lng], 14, { duration: 0.7 });
+  // 선택·상세표시를 먼저 확정 — 지도 이동(flyTo)이 실패해도 선택이 깨지지 않도록 분리
   showDetail(store);
+  if (store) {
+    if (store._marker) store._marker.bringToFront();
+    if (Number.isFinite(store.lat) && Number.isFinite(store.lng)) {
+      try { map.flyTo([store.lat, store.lng], 14, { duration: 0.7 }); } catch (e) { /* 지도 이동 실패는 선택과 무관 */ }
+    }
+  }
 }
 
 function showDetail(store) {
@@ -508,7 +531,7 @@ function showDetail(store) {
       <div style="font-size:11px;font-weight:700;color:#9ca3af;margin:10px 0 6px">폐점 시 고객 이동 예상</div>
       <div style="font-size:10px;color:#9ca3af;margin-bottom:6px">25% 이탈 추정 (${cand.huff_lost_subs}건) · 나머지는 아래 매장으로</div>
       <table class="huff-table">
-        ${cand.huff_redistribution.map(h => `
+        ${[...cand.huff_redistribution].sort((a,b) => a.distance_km - b.distance_km).map(h => `
           <tr>
             <td style="color:#374151">${h.store_name}</td>
             <td style="color:#9ca3af;text-align:right">${h.distance_km}km</td>
