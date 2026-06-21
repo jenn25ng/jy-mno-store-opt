@@ -55,6 +55,7 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
   color: #374151; cursor: pointer; font-family: inherit;
 }
 .list-controls .ctrl-sort { flex: 1 1 100%; }
+.list-controls .ctrl-region { flex: 1 1 calc(50% - 3px); }
 .list-controls select:disabled { color: #cbd5e1; background: #f9fafb; cursor: not-allowed; }
 .list-empty { padding: 20px; text-align: center; color: #9ca3af; font-size: 13px; }
 
@@ -202,6 +203,8 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
         <option value="name_asc">매장명 — 가나다순</option>
         <option value="zone_asc">상권 — 가나다순</option>
       </select>
+      <select class="ctrl-region" id="sidoSelect" onchange="setSido(this.value)" title="시/도"></select>
+      <select class="ctrl-region" id="guSelect" onchange="setGu(this.value)" title="구/군" disabled></select>
     </div>
     <div id="storeList" class="store-list"></div>
   </div>
@@ -230,7 +233,8 @@ let markers = [], clusterCircles = [];
 let currentTab = 'urgent', currentMapView = 'all';
 let selectedStoreId = null;
 let currentSort = 'profit_asc';
-let candById = {};
+let currentSido = '', currentGu = '';
+let candById = {}, storeById = {};
 
 // 동일 store_id 완전중복 제거 (LGU 원천데이터에 348건 중복 존재) — 선택 시 find() 오선택 방지
 function dedupeStores(stores) {
@@ -252,6 +256,8 @@ async function init() {
     DATA = await fetch('simulation_results.json').then(r => r.json());
     DATA.all_stores = dedupeStores(DATA.all_stores);
     candById = Object.fromEntries(DATA.closure_candidates.map(c => [c.store_id, c]));
+    storeById = Object.fromEntries(DATA.all_stores.map(s => [s.store_id, s]));
+    buildRegionFilters();
     renderKPIs();
     renderStoreList();
     renderMap();
@@ -298,6 +304,56 @@ function setSort(value) {
   renderStoreList();
 }
 
+// 주소(예: "서울 강남구 역삼동 12")에서 시/도·구를 파싱. 경쟁사는 주소가 없어 SKT만 대상.
+function sidoOf(s) { return (s && s.address ? s.address : '').split(' ')[0] || ''; }
+function guOf(s)   { return (s && s.address ? s.address : '').split(' ')[1] || ''; }
+
+function buildRegionFilters() {
+  const sidos = [...new Set(
+    DATA.all_stores.filter(s => s.carrier === 'SKT').map(sidoOf).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'ko'));
+  document.getElementById('sidoSelect').innerHTML =
+    '<option value="">전체 시/도</option>' +
+    sidos.map(s => `<option value="${s}">${s}</option>`).join('');
+  updateGuOptions();
+}
+
+function updateGuOptions() {
+  const sel = document.getElementById('guSelect');
+  if (!currentSido) {
+    sel.innerHTML = '<option value="">구/군 전체</option>';
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  const gus = [...new Set(
+    DATA.all_stores.filter(s => s.carrier === 'SKT' && sidoOf(s) === currentSido).map(guOf).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'ko'));
+  sel.innerHTML = '<option value="">구/군 전체</option>' +
+    gus.map(g => `<option value="${g}">${g}</option>`).join('');
+}
+
+function setSido(value) {
+  currentSido = value;
+  currentGu = '';
+  updateGuOptions();
+  renderStoreList();
+}
+
+function setGu(value) {
+  currentGu = value;
+  renderStoreList();
+}
+
+// 후보 리스트는 address 필드가 없어 storeById로 원본 매장을 찾아 지역 판정.
+function inRegion(item) {
+  if (!currentSido) return true;
+  const full = storeById[item.store_id] || item;
+  if (sidoOf(full) !== currentSido) return false;
+  if (currentGu && guOf(full) !== currentGu) return false;
+  return true;
+}
+
 // 위험신호 점수 = 충족한 렌즈 개수(0~3). 후보가 아닌 매장은 -1로 맨 아래 정렬.
 function riskScore(it) {
   if (it.lens_passed != null) return it.lens_passed;
@@ -333,6 +389,7 @@ function renderStoreList() {
     isAll = true;
   }
 
+  items = items.filter(inRegion);
   items = sortItems(items);
 
   if (!items.length) {
