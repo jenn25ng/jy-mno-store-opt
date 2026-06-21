@@ -3,200 +3,199 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>매장수 최적화 시뮬레이션 — SKT 유통혁신팀</title>
+<title>매장 폐점 진단 — SKT 유통혁신팀</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 900px; min-height: 900px; }
-body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f5f6f8; color: #1a1a2e; }
 
 .header {
-  background: linear-gradient(135deg, #E51937 0%, #b01228 100%);
-  color: white; padding: 16px 24px;
-  display: flex; align-items: center; justify-content: space-between;
+  background: #E51937; color: white;
+  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
 }
-.header h1 { font-size: 18px; font-weight: 700; }
-.header .subtitle { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+.header-title { font-size: 17px; font-weight: 700; }
+.header-sub { font-size: 11px; opacity: 0.75; margin-top: 2px; }
 .badge-sample {
-  background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
   padding: 4px 10px; border-radius: 20px; font-size: 11px;
 }
 
-.main { display: grid; grid-template-columns: 340px 1fr; gap: 0; height: calc(100vh - 60px); }
+.main { display: grid; grid-template-columns: 340px 1fr; height: calc(100vh - 56px); }
 
-/* LEFT PANEL */
-.left-panel { background: white; overflow-y: auto; border-right: 1px solid #e5e7eb; }
+/* LEFT */
+.left-panel { background: white; overflow-y: auto; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; }
 
-.section-header {
-  padding: 14px 16px 10px;
-  border-bottom: 1px solid #f3f4f6;
-  position: sticky; top: 0; background: white; z-index: 10;
-}
-.section-title { font-size: 13px; font-weight: 700; color: #374151; }
-.section-meta { font-size: 11px; color: #9ca3af; margin-top: 2px; }
-
-/* KPI STRIP */
 .kpi-strip {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 1px; background: #e5e7eb; border-bottom: 1px solid #e5e7eb;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #f0f0f0;
 }
-.kpi-cell {
-  background: white; padding: 12px; text-align: center;
-}
-.kpi-num { font-size: 22px; font-weight: 800; color: #E51937; }
-.kpi-label { font-size: 10px; color: #6b7280; margin-top: 2px; }
+.kpi-cell { padding: 12px 8px; text-align: center; border-right: 1px solid #f0f0f0; }
+.kpi-cell:last-child { border-right: none; }
+.kpi-num { font-size: 20px; font-weight: 800; }
+.kpi-num.danger { color: #E51937; }
+.kpi-num.warn { color: #f59e0b; }
+.kpi-num.neutral { color: #6b7280; }
+.kpi-label { font-size: 10px; color: #9ca3af; margin-top: 2px; }
 
-/* TABS */
-.tabs { display: flex; border-bottom: 2px solid #e5e7eb; }
+.tabs { display: flex; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
 .tab {
-  flex: 1; padding: 10px 8px; text-align: center;
-  font-size: 12px; cursor: pointer; color: #6b7280;
-  border-bottom: 2px solid transparent; margin-bottom: -2px;
-  transition: all 0.2s;
+  flex: 1; padding: 10px 6px; text-align: center; font-size: 12px;
+  cursor: pointer; color: #9ca3af; border-bottom: 2px solid transparent;
+  margin-bottom: -1px; transition: all 0.15s;
 }
 .tab.active { color: #E51937; border-bottom-color: #E51937; font-weight: 700; }
 
-/* STORE CARDS */
-.store-list { padding: 8px; }
+.store-list { padding: 8px; flex: 1; }
+
+/* VERDICT BADGE */
+.verdict {
+  display: inline-block; font-size: 10px; font-weight: 700;
+  padding: 2px 8px; border-radius: 10px; flex-shrink: 0;
+}
+.verdict.urgent { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.verdict.review { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
+.verdict.watch  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+
+/* STORE CARD */
 .store-card {
   border: 1px solid #e5e7eb; border-radius: 10px;
-  padding: 12px; margin-bottom: 8px; cursor: pointer;
-  transition: all 0.15s; background: white;
+  padding: 11px 12px; margin-bottom: 7px; cursor: pointer;
+  transition: all 0.12s; background: white;
 }
-.store-card:hover { border-color: #E51937; box-shadow: 0 2px 8px rgba(229,25,55,0.15); }
-.store-card.selected { border-color: #E51937; background: #fff5f6; }
-.store-card.candidate { border-left: 3px solid #ef4444; }
+.store-card:hover { border-color: #E51937; box-shadow: 0 2px 8px rgba(229,25,55,0.1); }
+.store-card.selected { border-color: #E51937; background: #fff8f8; }
 
-.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-.card-name { font-size: 13px; font-weight: 700; }
-.card-zone { font-size: 11px; color: #6b7280; margin-top: 1px; }
-.signal-count {
-  background: #ef4444; color: white;
-  width: 22px; height: 22px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; flex-shrink: 0;
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
+.card-name { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.card-zone { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+
+/* LENS PILLS */
+.lens-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 7px; }
+.lens-pill {
+  font-size: 10px; padding: 2px 7px; border-radius: 8px;
+  display: flex; align-items: center; gap: 3px;
 }
+.lens-pill.pass { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.lens-pill.fail { background: #fafafa; color: #9ca3af; border: 1px solid #e5e7eb; }
 
-.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 8px; }
+/* METRICS */
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
 .metric { background: #f9fafb; border-radius: 6px; padding: 5px 6px; text-align: center; }
 .metric-val { font-size: 12px; font-weight: 700; }
 .metric-val.neg { color: #ef4444; }
 .metric-val.pos { color: #10b981; }
-.metric-label { font-size: 9px; color: #9ca3af; }
+.metric-label { font-size: 9px; color: #9ca3af; margin-top: 1px; }
 
-.signals-list { }
-.signal-item {
-  display: flex; gap: 4px; align-items: flex-start;
-  font-size: 10px; color: #374151; margin-bottom: 3px; line-height: 1.4;
+/* MINI CARD */
+.mini-card {
+  border: 1px solid #e5e7eb; border-radius: 8px; padding: 9px 11px;
+  margin-bottom: 6px; cursor: pointer; background: white;
+  display: flex; justify-content: space-between; align-items: center;
 }
-.signal-dot { width: 5px; height: 5px; border-radius: 50%; background: #ef4444; flex-shrink: 0; margin-top: 4px; }
-
-.layer-badge {
-  display: inline-flex; align-items: center; gap: 3px;
-  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 10px;
-  margin-right: 3px;
-}
-.badge-l1 { background: #ede9fe; color: #7c3aed; }
-.badge-l2 { background: #fef3c7; color: #d97706; }
-.badge-l3 { background: #d1fae5; color: #059669; }
+.mini-card:hover { border-color: #d1d5db; }
+.mini-card.selected { border-color: #E51937; background: #fff8f8; }
+.mini-name { font-size: 12px; font-weight: 600; }
+.mini-sub { font-size: 10px; color: #9ca3af; margin-top: 2px; }
 
 /* RIGHT: MAP */
 .right-panel { position: relative; }
 #map { width: 100%; height: 100%; }
 
-/* MAP OVERLAY */
+/* LENS FILTER BAR */
+.lens-bar {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 1000; display: flex; gap: 0; background: white;
+  border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+  overflow: hidden; font-size: 11px; border: 1px solid #e5e7eb;
+}
+.lens-btn {
+  padding: 7px 16px; display: flex; align-items: center; gap: 5px;
+  cursor: pointer; transition: background 0.15s; color: #6b7280;
+  border-right: 1px solid #e5e7eb;
+}
+.lens-btn:last-child { border-right: none; }
+.lens-btn.active { background: #E51937; color: white; font-weight: 700; }
+.lens-btn:not(.active):hover { background: #f9fafb; }
+
+/* MAP LEGEND */
 .map-legend {
   position: absolute; bottom: 20px; left: 10px; z-index: 1000;
-  background: white; border-radius: 10px; padding: 12px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15); font-size: 11px; min-width: 160px;
+  background: white; border-radius: 10px; padding: 12px 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12); font-size: 11px; min-width: 170px;
+  border: 1px solid #e5e7eb;
 }
 .legend-title { font-weight: 700; margin-bottom: 8px; font-size: 12px; }
-.legend-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.legend-ring { width: 12px; height: 12px; border-radius: 50%; border: 2px solid #f59e0b; background: rgba(245,158,11,0.1); flex-shrink: 0; }
 
 /* DETAIL PANEL */
 .detail-overlay {
   position: absolute; top: 10px; right: 10px; z-index: 1000;
   background: white; border-radius: 12px; padding: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.2); width: 280px;
-  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 290px;
+  display: none; border: 1px solid #e5e7eb;
 }
 .detail-overlay.show { display: block; }
-.detail-close { position: absolute; top: 10px; right: 12px; cursor: pointer; color: #9ca3af; font-size: 16px; }
-.detail-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-.detail-meta { font-size: 11px; color: #6b7280; margin-bottom: 12px; }
-.detail-section { margin-bottom: 10px; }
-.detail-section-title { font-size: 10px; font-weight: 700; color: #9ca3af; text-transform: uppercase; margin-bottom: 5px; }
-.huff-row { display: flex; justify-content: space-between; font-size: 11px; padding: 3px 0; border-bottom: 1px solid #f3f4f6; }
+.detail-close { position: absolute; top: 12px; right: 14px; cursor: pointer; color: #9ca3af; font-size: 16px; }
+.detail-name { font-size: 14px; font-weight: 800; margin-bottom: 3px; padding-right: 20px; }
+.detail-zone { font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
 
-/* LAYER PIPELINE VIZ */
-.pipeline-bar {
-  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-  z-index: 1000; display: flex; gap: 0; background: white;
-  border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-  overflow: hidden; font-size: 11px;
+.lens-block { margin-bottom: 8px; }
+.lens-check-row {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
 }
-.pipe-step {
-  padding: 7px 14px; display: flex; align-items: center; gap: 5px;
-  cursor: pointer; transition: background 0.15s;
-}
-.pipe-step:not(:last-child) { border-right: 1px solid #e5e7eb; }
-.pipe-step.active { background: #E51937; color: white; }
-.pipe-step:not(.active):hover { background: #f9fafb; }
-.pipe-icon { font-size: 13px; }
+.lens-check-row.pass { background: #f0fdf4; }
+.lens-check-row.fail { background: #f9fafb; }
+.lens-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.lens-label { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+.lens-desc { font-size: 11px; color: #6b7280; line-height: 1.4; }
 
-/* ALL STORES MODE */
-.all-stores-mode .store-card { border-left: 3px solid #6b7280; }
-.all-stores-mode .store-card.skt { border-left-color: #E51937; }
+.huff-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
+.huff-table td { padding: 4px 0; border-bottom: 1px solid #f3f4f6; }
+.huff-table tr:last-child td { border-bottom: none; }
+
+.notice {
+  margin-top: 10px; padding: 8px 10px; background: #fafafa;
+  border-radius: 7px; font-size: 10px; color: #9ca3af;
+  border: 1px solid #f3f4f6; line-height: 1.5;
+}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div>
-    <div class="h1">🗺️ 매장수 최적화 시뮬레이션</div>
-    <div class="subtitle">SKT 유통혁신팀 | 4-Layer AI 분석 파이프라인</div>
+    <div class="header-title">매장 폐점 진단</div>
+    <div class="header-sub">SKT 유통혁신팀 | 수익성 · M/S 방어 · 커버리지 3가지 기준으로 판단</div>
   </div>
-  <div class="badge-sample">⚠️ 시뮬레이션 데이터 (위치 실좌표, 성능 합성)</div>
+  <div class="badge-sample">위치 실제 데이터 · 성능 시뮬레이션</div>
 </div>
 
 <div class="main">
-  <!-- LEFT -->
   <div class="left-panel">
     <div class="kpi-strip" id="kpiStrip"></div>
-
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('candidates')">🚨 폐점 후보</div>
-      <div class="tab" onclick="switchTab('clusters')">📍 과밀 클러스터</div>
+      <div class="tab active" onclick="switchTab('urgent')">폐점 유력</div>
+      <div class="tab" onclick="switchTab('review')">조건부 검토</div>
       <div class="tab" onclick="switchTab('all')">전체 매장</div>
     </div>
-
     <div id="storeList" class="store-list"></div>
   </div>
 
-  <!-- RIGHT -->
   <div class="right-panel">
     <div id="map"></div>
 
-    <div class="pipeline-bar">
-      <div class="pipe-step active" id="pipe1" onclick="setPipeLayer(1)">
-        <span class="pipe-icon">📍</span> L1 DBSCAN
-      </div>
-      <div class="pipe-step" id="pipe2" onclick="setPipeLayer(2)">
-        <span class="pipe-icon">🔍</span> L2 이상탐지
-      </div>
-      <div class="pipe-step" id="pipe3" onclick="setPipeLayer(3)">
-        <span class="pipe-icon">🔄</span> L3 Huff 시뮬
-      </div>
-      <div class="pipe-step" id="pipe4" onclick="setPipeLayer(4)">
-        <span class="pipe-icon">💡</span> L4 종합
-      </div>
+    <div class="lens-bar">
+      <div class="lens-btn active" id="lbAll" onclick="setMapView('all')">전체 보기</div>
+      <div class="lens-btn" id="lbProfit" onclick="setMapView('profit')">수익성 미달</div>
+      <div class="lens-btn" id="lbMs" onclick="setMapView('ms')">M/S 방어 가능</div>
+      <div class="lens-btn" id="lbCoverage" onclick="setMapView('coverage')">커버리지 여유</div>
     </div>
 
     <div class="map-legend" id="mapLegend"></div>
-
     <div class="detail-overlay" id="detailPanel">
       <span class="detail-close" onclick="closeDetail()">✕</span>
       <div id="detailContent"></div>
@@ -205,15 +204,11 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 </div>
 
 <script>
-let DATA = null;
-let map = null;
-let markers = [];
-let clusterCircles = [];
-let currentLayer = 1;
-let currentTab = 'candidates';
+let DATA = null, map = null;
+let markers = [], clusterCircles = [];
+let currentTab = 'urgent', currentMapView = 'all';
 let selectedStoreId = null;
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
 async function init() {
   map = L.map('map', { zoomControl: true }).setView([37.5665, 126.9780], 11);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -221,86 +216,85 @@ async function init() {
   }).addTo(map);
 
   try {
-    const resp = await fetch('simulation_results.json');
-    DATA = await resp.json();
+    DATA = await fetch('simulation_results.json').then(r => r.json());
     renderKPIs();
     renderStoreList();
     renderMap();
     renderLegend();
   } catch(e) {
     document.getElementById('storeList').innerHTML =
-      '<div style="padding:20px;color:#ef4444;font-size:13px;">❌ simulation_results.json 로드 실패<br>python3 simulation.py 실행 후 다시 시도</div>';
+      '<div style="padding:20px;color:#ef4444;font-size:13px;">simulation_results.json 로드 실패<br>python3 simulation.py 먼저 실행하세요</div>';
   }
 }
 
-// ─── KPI ─────────────────────────────────────────────────────────────────
 function renderKPIs() {
   const s = DATA.summary;
-  const candidates = DATA.closure_candidates;
-  const monthlyLoss = candidates.reduce((sum, c) =>
-    sum + (c.monthly_profit_krw < 0 ? Math.abs(c.monthly_profit_krw) : 0), 0);
-
+  const vc = s.verdict_counts || {};
   document.getElementById('kpiStrip').innerHTML = `
     <div class="kpi-cell">
-      <div class="kpi-num">${s.total_skt}</div>
-      <div class="kpi-label">SKT 매장 수</div>
+      <div class="kpi-num neutral">${s.total_skt}</div>
+      <div class="kpi-label">전체 매장</div>
     </div>
     <div class="kpi-cell">
-      <div class="kpi-num">${s.overcrowded_clusters}</div>
-      <div class="kpi-label">과밀 클러스터</div>
+      <div class="kpi-num danger">${vc['폐점 유력'] || 0}</div>
+      <div class="kpi-label">폐점 유력</div>
     </div>
     <div class="kpi-cell">
-      <div class="kpi-num">${s.closure_candidates}</div>
-      <div class="kpi-label">복수신호 후보</div>
+      <div class="kpi-num warn">${vc['조건부 검토'] || 0}</div>
+      <div class="kpi-label">조건부 검토</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-num neutral">${vc['관찰'] || 0}</div>
+      <div class="kpi-label">관찰</div>
     </div>
   `;
 }
 
-// ─── TAB ─────────────────────────────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    t.classList.toggle('active', ['candidates','clusters','all'][i] === tab);
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', ['urgent','review','all'][i] === tab);
   });
   renderStoreList();
-  renderMap();
 }
 
-// ─── STORE LIST ──────────────────────────────────────────────────────────
 function renderStoreList() {
   const list = document.getElementById('storeList');
+  let items;
 
-  if (currentTab === 'candidates') {
-    const items = DATA.closure_candidates;
+  if (currentTab === 'urgent') {
+    items = DATA.closure_candidates.filter(c => c.verdict === '폐점 유력');
     if (!items.length) {
-      list.innerHTML = '<div style="padding:20px;text-align:center;color:#9ca3af;font-size:13px;">복수 신호 매장 없음</div>';
+      list.innerHTML = '<div style="padding:20px;text-align:center;color:#9ca3af;font-size:13px;">해당 매장 없음</div>';
       return;
     }
     list.innerHTML = items.map(c => candidateCard(c)).join('');
 
-  } else if (currentTab === 'clusters') {
-    // Group overcrowded stores by cluster
-    const skt = DATA.all_stores.filter(s => s.carrier === 'SKT' && s.is_overcrowded);
-    const byCluster = {};
-    skt.forEach(s => {
-      const k = s.dbscan_cluster;
-      if (!byCluster[k]) byCluster[k] = [];
-      byCluster[k].push(s);
-    });
-    list.innerHTML = Object.entries(byCluster).map(([cid, stores]) => `
-      <div style="margin-bottom:12px;">
-        <div style="font-size:11px;font-weight:700;color:#7c3aed;padding:8px 12px 4px;display:flex;align-items:center;gap:6px;">
-          <span style="background:#ede9fe;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;">${stores.length}</span>
-          클러스터 ${cid} — 반경 800m 내 ${stores.length}개 SKT 매장
-        </div>
-        ${stores.map(s => miniCard(s)).join('')}
-      </div>
-    `).join('');
+  } else if (currentTab === 'review') {
+    items = DATA.closure_candidates.filter(c => c.verdict === '조건부 검토');
+    list.innerHTML = items.map(c => candidateCard(c)).join('');
 
   } else {
     const skt = DATA.all_stores.filter(s => s.carrier === 'SKT');
     list.innerHTML = skt.map(s => miniCard(s)).join('');
   }
+}
+
+function verdictBadge(verdict) {
+  if (verdict === '폐점 유력')   return `<span class="verdict urgent">폐점 유력</span>`;
+  if (verdict === '조건부 검토') return `<span class="verdict review">조건부 검토</span>`;
+  if (verdict === '관찰')        return `<span class="verdict watch">관찰</span>`;
+  return '';
+}
+
+function lensPills(c) {
+  return `
+    <div class="lens-row">
+      <span class="lens-pill ${c.lens_profitability ? 'pass' : 'fail'}">${c.lens_profitability ? '✓' : '–'} 수익성 미달</span>
+      <span class="lens-pill ${c.lens_ms_defense   ? 'pass' : 'fail'}">${c.lens_ms_defense   ? '✓' : '–'} M/S 방어 가능</span>
+      <span class="lens-pill ${c.lens_coverage     ? 'pass' : 'fail'}">${c.lens_coverage     ? '✓' : '–'} 커버리지 여유</span>
+    </div>
+  `;
 }
 
 function candidateCard(c) {
@@ -310,101 +304,94 @@ function candidateCard(c) {
     : `<span class="metric-val pos">+${(profit/10000).toFixed(0)}만</span>`;
 
   return `
-    <div class="store-card candidate${selectedStoreId === c.store_id ? ' selected' : ''}"
+    <div class="store-card${selectedStoreId === c.store_id ? ' selected' : ''}"
          onclick="selectStore('${c.store_id}')">
       <div class="card-top">
         <div>
           <div class="card-name">${c.store_name}</div>
           <div class="card-zone">${c.zone}</div>
         </div>
-        <div class="signal-count">${c.signal_count}</div>
+        ${verdictBadge(c.verdict)}
       </div>
       <div class="metrics">
         <div class="metric">
-          <div class="metric-val">${c.monthly_subs}</div>
+          <div class="metric-val">${c.monthly_subs ?? '-'}</div>
           <div class="metric-label">월순증(건)</div>
         </div>
         <div class="metric">
           ${profitStr}
-          <div class="metric-label">월손익(만)</div>
+          <div class="metric-label">월손익</div>
         </div>
         <div class="metric">
-          <div class="metric-val${c.ms_share < 0.38 ? ' neg' : ''}">${(c.ms_share*100).toFixed(1)}%</div>
-          <div class="metric-label">M/S</div>
+          <div class="metric-val">${c.nearby_skt_count ?? '-'}</div>
+          <div class="metric-label">인근 SKT</div>
         </div>
       </div>
-      <div class="signals-list">
-        ${c.signals.map((s,i) => `
-          <div class="signal-item">
-            <div class="signal-dot"></div>
-            <div>${s}</div>
-          </div>
-        `).join('')}
-      </div>
-      ${c.is_overcrowded ? '<span class="layer-badge badge-l1">L1 과밀</span>' : ''}
-      ${c.if_anomaly ? '<span class="layer-badge badge-l2">L2 이상</span>' : ''}
-      ${c.huff_redistribution ? '<span class="layer-badge badge-l3">L3 Huff</span>' : ''}
+      ${lensPills(c)}
     </div>
   `;
 }
 
 function miniCard(s) {
-  const isAnomaly = s.if_anomaly;
-  const isCrowded = s.is_overcrowded;
+  const cand = DATA.closure_candidates.find(c => c.store_id === s.store_id);
   return `
-    <div class="store-card${selectedStoreId === s.store_id ? ' selected' : ''}"
-         style="border-left:3px solid ${isCrowded ? '#7c3aed' : isAnomaly ? '#f59e0b' : '#d1d5db'}"
+    <div class="mini-card${selectedStoreId === s.store_id ? ' selected' : ''}"
          onclick="selectStore('${s.store_id}')">
-      <div class="card-top">
-        <div>
-          <div class="card-name" style="font-size:12px;">${s.store_name}</div>
-          <div class="card-zone">${s.zone}</div>
-        </div>
-        <div style="font-size:10px;color:#9ca3af;text-align:right;">
-          ${isCrowded ? '<div style="color:#7c3aed">과밀</div>' : ''}
-          ${isAnomaly ? '<div style="color:#f59e0b">이상</div>' : ''}
-        </div>
+      <div>
+        <div class="mini-name">${s.store_name}</div>
+        <div class="mini-sub">${s.zone}${s.monthly_subs ? ` · 월순증 ${s.monthly_subs}건` : ''}</div>
       </div>
-      ${s.monthly_subs ? `<div style="font-size:11px;color:#6b7280;">월순증 ${s.monthly_subs}건 | M/S ${(s.ms_share*100).toFixed(1)}%</div>` : ''}
+      ${cand ? verdictBadge(cand.verdict) : ''}
     </div>
   `;
 }
 
-// ─── MAP ─────────────────────────────────────────────────────────────────
+function setMapView(view) {
+  currentMapView = view;
+  document.querySelectorAll('.lens-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById({all:'lbAll',profit:'lbProfit',ms:'lbMs',coverage:'lbCoverage'}[view]).classList.add('active');
+  renderMap();
+  renderLegend();
+}
+
 function renderMap() {
-  // Clear
   markers.forEach(m => map.removeLayer(m));
   clusterCircles.forEach(c => map.removeLayer(c));
-  markers = [];
-  clusterCircles = [];
+  markers = []; clusterCircles = [];
 
-  const all = DATA.all_stores;
-  const candidates = new Set(DATA.closure_candidates.map(c => c.store_id));
+  const urgentIds = new Set(DATA.closure_candidates.filter(c => c.verdict === '폐점 유력').map(c => c.store_id));
+  const reviewIds = new Set(DATA.closure_candidates.filter(c => c.verdict === '조건부 검토').map(c => c.store_id));
+  const candMap   = Object.fromEntries(DATA.closure_candidates.map(c => [c.store_id, c]));
 
-  all.forEach(store => {
-    let color, radius, opacity;
-    if (store.carrier === 'SKT') {
-      if (candidates.has(store.store_id)) {
-        color = '#ef4444'; radius = 10; opacity = 1;
-      } else if (store.is_overcrowded) {
-        color = '#7c3aed'; radius = 7; opacity = 0.85;
-      } else if (store.if_anomaly) {
-        color = '#f59e0b'; radius = 7; opacity = 0.85;
-      } else {
-        color = '#E51937'; radius = 6; opacity = 0.6;
+  DATA.all_stores.forEach(store => {
+    let color = '#d1d5db', radius = 5, opacity = 0.5, weight = 1, stroke = null;
+
+    if (store.carrier === 'KT')  { color = '#3b82f6'; }
+    else if (store.carrier === 'LGU') { color = '#10b981'; }
+    else {
+      const cand = candMap[store.store_id];
+      if (currentMapView === 'all') {
+        if (urgentIds.has(store.store_id))      { color = '#E51937'; radius = 9; opacity = 1; stroke = '#fff'; weight = 2; }
+        else if (reviewIds.has(store.store_id)) { color = '#f59e0b'; radius = 7; opacity = 0.9; }
+        else                                    { color = '#E51937'; radius = 5; opacity = 0.4; }
+      } else if (currentMapView === 'profit') {
+        color = cand?.lens_profitability ? '#E51937' : '#d1d5db';
+        radius = cand?.lens_profitability ? 7 : 5;
+        opacity = cand?.lens_profitability ? 0.9 : 0.3;
+      } else if (currentMapView === 'ms') {
+        color = cand?.lens_ms_defense ? '#7c3aed' : '#d1d5db';
+        radius = cand?.lens_ms_defense ? 7 : 5;
+        opacity = cand?.lens_ms_defense ? 0.9 : 0.3;
+      } else if (currentMapView === 'coverage') {
+        color = cand?.lens_coverage ? '#0891b2' : '#d1d5db';
+        radius = cand?.lens_coverage ? 7 : 5;
+        opacity = cand?.lens_coverage ? 0.9 : 0.3;
       }
-    } else if (store.carrier === 'KT') {
-      color = '#3b82f6'; radius = 5; opacity = 0.5;
-    } else {
-      color = '#10b981'; radius = 5; opacity = 0.5;
     }
 
     const m = L.circleMarker([store.lat, store.lng], {
-      radius,
-      fillColor: color,
-      color: candidates.has(store.store_id) ? '#fff' : color,
-      weight: candidates.has(store.store_id) ? 2 : 1,
-      fillOpacity: opacity,
+      radius, fillColor: color, color: stroke || color,
+      weight, fillOpacity: opacity,
     }).addTo(map);
 
     m.on('click', () => selectStore(store.store_id));
@@ -416,114 +403,129 @@ function renderMap() {
     store._marker = m;
   });
 
-  // DBSCAN cluster circles
-  if (currentLayer >= 1) {
-    const skt = all.filter(s => s.carrier === 'SKT' && s.is_overcrowded);
+  // 밀집 상권 원
+  if (currentMapView === 'all' || currentMapView === 'coverage') {
+    const skt = DATA.all_stores.filter(s => s.carrier === 'SKT');
     const byCluster = {};
     skt.forEach(s => {
-      if (!byCluster[s.dbscan_cluster]) byCluster[s.dbscan_cluster] = [];
-      byCluster[s.dbscan_cluster].push(s);
+      if ((s.dbscan_cluster_size || 0) >= 3) {
+        const k = s.dbscan_cluster;
+        if (!byCluster[k]) byCluster[k] = [];
+        byCluster[k].push(s);
+      }
     });
-
     Object.values(byCluster).forEach(stores => {
       const avgLat = stores.reduce((a, s) => a + s.lat, 0) / stores.length;
       const avgLng = stores.reduce((a, s) => a + s.lng, 0) / stores.length;
       const c = L.circle([avgLat, avgLng], {
-        radius: 800,
-        color: '#7c3aed', fillColor: '#7c3aed',
-        fillOpacity: 0.06, weight: 1.5, dashArray: '5,5'
+        radius: 800, color: '#94a3b8', fillColor: '#94a3b8',
+        fillOpacity: 0.05, weight: 1, dashArray: '4,4'
       }).addTo(map);
       clusterCircles.push(c);
     });
   }
 }
 
+function renderLegend() {
+  const legends = {
+    all: `
+      <div class="legend-title">판정 결과</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#E51937;width:13px;height:13px;border:2px solid #fff;box-shadow:0 0 0 1px #E51937"></div> 폐점 유력</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> 조건부 검토</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#E51937;opacity:0.4"></div> 일반 SKT 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#3b82f6"></div> KT</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#10b981"></div> LGU+</div>
+      <div style="font-size:9px;color:#9ca3af;margin-top:6px;">점선 원 = 밀집 상권 (800m)</div>
+    `,
+    profit: `
+      <div class="legend-title">수익성 미달 기준</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#E51937"></div> 적자 + 이탈 패턴</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#d1d5db"></div> 해당 없음</div>
+    `,
+    ms: `
+      <div class="legend-title">M/S 방어 가능</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> 인근 SKT가 충분히 흡수</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#d1d5db"></div> 흡수 불충분</div>
+    `,
+    coverage: `
+      <div class="legend-title">커버리지 여유</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#0891b2"></div> 반경 내 대체 매장 충분</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#d1d5db"></div> 단독 입지</div>
+    `,
+  };
+  document.getElementById('mapLegend').innerHTML = legends[currentMapView];
+}
+
 function selectStore(storeId) {
   selectedStoreId = storeId;
   renderStoreList();
-
   const store = DATA.all_stores.find(s => s.store_id === storeId);
-  const candidate = DATA.closure_candidates.find(c => c.store_id === storeId);
-
-  if (store) {
-    map.flyTo([store.lat, store.lng], 14, { duration: 0.8 });
-  }
-
-  showDetail(store, candidate);
+  if (store) map.flyTo([store.lat, store.lng], 14, { duration: 0.7 });
+  showDetail(store);
 }
 
-function showDetail(store, candidate) {
-  const panel = document.getElementById('detailPanel');
+function showDetail(store) {
+  if (!store) return;
+  const panel   = document.getElementById('detailPanel');
   const content = document.getElementById('detailContent');
-
-  if (!store) { panel.classList.remove('show'); return; }
+  const cand    = DATA.closure_candidates.find(c => c.store_id === store.store_id);
 
   const profit = store.monthly_profit_krw;
-  const profitStr = profit
-    ? (profit < 0 ? `<span style="color:#ef4444">-${Math.abs(profit/10000).toFixed(0)}만원/월</span>`
-                  : `<span style="color:#10b981">+${(profit/10000).toFixed(0)}만원/월</span>`)
-    : '-';
+  const profitStr = profit != null
+    ? (profit < 0
+        ? `적자 <b style="color:#E51937">월 ${Math.abs(profit/10000).toFixed(0)}만원 손실</b>`
+        : `흑자 <b style="color:#059669">월 ${(profit/10000).toFixed(0)}만원</b>`)
+    : '데이터 없음';
+
+  const lensHtml = cand ? `
+    <div style="font-size:11px;font-weight:700;color:#9ca3af;margin-bottom:6px;">3가지 기준 판정</div>
+    <div class="lens-check-row ${cand.lens_profitability ? 'pass' : 'fail'}">
+      <div class="lens-icon">${cand.lens_profitability ? '✅' : '⬜'}</div>
+      <div>
+        <div class="lens-label">수익성 미달</div>
+        <div class="lens-desc">${profitStr}${store.monthly_subs ? ` · 월순증 ${store.monthly_subs}건` : ''}</div>
+      </div>
+    </div>
+    <div class="lens-check-row ${cand.lens_ms_defense ? 'pass' : 'fail'}">
+      <div class="lens-icon">${cand.lens_ms_defense ? '✅' : '⬜'}</div>
+      <div>
+        <div class="lens-label">M/S 방어 가능</div>
+        <div class="lens-desc">인근 SKT 매장 ${cand.nearby_skt_count}개 · 흡수율 ${cand.huff_absorption_rate != null ? (cand.huff_absorption_rate*100).toFixed(0)+'%' : '-'}</div>
+      </div>
+    </div>
+    <div class="lens-check-row ${cand.lens_coverage ? 'pass' : 'fail'}">
+      <div class="lens-icon">${cand.lens_coverage ? '✅' : '⬜'}</div>
+      <div>
+        <div class="lens-label">커버리지 여유</div>
+        <div class="lens-desc">같은 밀집 상권 내 SKT 매장 ${store.dbscan_cluster_size || 0}개</div>
+      </div>
+    </div>
+  ` : '<div style="font-size:12px;color:#9ca3af;padding:8px 0">3개 기준 모두 미해당 — 유지 권고</div>';
 
   let huffHtml = '';
-  if (candidate?.huff_redistribution?.length) {
+  if (cand?.huff_redistribution?.length) {
     huffHtml = `
-      <div class="detail-section">
-        <div class="detail-section-title">🔄 L3 Huff — 폐점 시 수요 재배분</div>
-        <div style="font-size:11px;color:#6b7280;margin-bottom:6px;">75% 유지율 가정 (25% = ${candidate.huff_lost_subs}건 이탈)</div>
-        ${candidate.huff_redistribution.map(h => `
-          <div class="huff-row">
-            <span>${h.store_name}</span>
-            <span style="color:#6b7280">${h.distance_km}km</span>
-            <span style="font-weight:700;color:#059669">+${h.absorbed_subs}건</span>
-          </div>
+      <div style="font-size:11px;font-weight:700;color:#9ca3af;margin:10px 0 6px">폐점 시 고객 이동 예상</div>
+      <div style="font-size:10px;color:#9ca3af;margin-bottom:6px">25% 이탈 추정 (${cand.huff_lost_subs}건) · 나머지는 아래 매장으로</div>
+      <table class="huff-table">
+        ${cand.huff_redistribution.map(h => `
+          <tr>
+            <td style="color:#374151">${h.store_name}</td>
+            <td style="color:#9ca3af;text-align:right">${h.distance_km}km</td>
+            <td style="color:#059669;font-weight:700;text-align:right">+${h.absorbed_subs}건</td>
+          </tr>
         `).join('')}
-      </div>
+      </table>
     `;
   }
 
   content.innerHTML = `
     <div class="detail-name">${store.store_name}</div>
-    <div class="detail-meta">${store.zone} · ${store.zone_type === 'premium' ? '프리미엄 상권' : store.zone_type === 'high' ? '주요 상권' : '일반 상권'}</div>
-
-    ${store.monthly_subs ? `
-    <div class="detail-section">
-      <div class="detail-section-title">📊 성능 지표</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px;">
-        <div><b>월 순증</b><br>${store.monthly_subs}건</div>
-        <div><b>월 손익</b><br>${profitStr}</div>
-        <div><b>M/S</b><br>${(store.ms_share*100).toFixed(1)}%</div>
-        <div><b>유동인구</b><br>${store.foot_traffic_score}점</div>
-      </div>
-    </div>
-    ` : ''}
-
-    ${store.is_overcrowded ? `
-    <div class="detail-section">
-      <div class="detail-section-title">📍 L1 DBSCAN — 과밀 감지</div>
-      <div style="font-size:12px;">클러스터 #${store.dbscan_cluster} | 반경 800m 내 동일 클러스터 매장 존재</div>
-    </div>
-    ` : ''}
-
-    ${store.if_anomaly ? `
-    <div class="detail-section">
-      <div class="detail-section-title">🔍 L2 Isolation Forest — 이상 패턴</div>
-      <div style="font-size:12px;">이상 점수: ${store.if_score} (낮을수록 더 이상)<br>
-      <span style="color:#9ca3af;font-size:10px;">※ 이상 = 즉시 폐점 아님. 검토 대상 플래그.</span></div>
-    </div>
-    ` : ''}
-
+    <div class="detail-zone">${store.zone || ''} ${store.carrier === 'SKT' ? '' : '· ' + store.carrier}</div>
+    ${cand ? `<div style="margin-bottom:12px">${verdictBadge(cand.verdict)}</div>` : ''}
+    ${lensHtml}
     ${huffHtml}
-
-    ${candidate?.signals?.length ? `
-    <div class="detail-section">
-      <div class="detail-section-title">💡 L4 — 종합 신호</div>
-      ${candidate.signals.map(s => `<div style="font-size:11px;margin-bottom:4px;">• ${s}</div>`).join('')}
-    </div>
-    ` : ''}
-
-    <div style="margin-top:10px;padding:8px;background:#fef9c3;border-radius:6px;font-size:10px;color:#92400e;">
-      ⚠️ AI 신호는 참고 지표입니다. 최종 의사결정은 현장 검토 및 전략 판단 필요.
-    </div>
+    <div class="notice">AI 신호는 참고 지표입니다. 최종 의사결정은 현장 검토 및 전략 판단이 필요합니다.</div>
   `;
 
   panel.classList.add('show');
@@ -535,47 +537,11 @@ function closeDetail() {
   renderStoreList();
 }
 
-// ─── PIPELINE LAYER CONTROL ──────────────────────────────────────────────
-function setPipeLayer(n) {
-  currentLayer = n;
-  document.querySelectorAll('.pipe-step').forEach((el, i) => {
-    el.classList.toggle('active', i < n);
-  });
-
-  // Explanatory overlays per layer
-  renderLegend();
-}
-
-function renderLegend() {
-  const legends = {
-    1: `
-      <div class="legend-title">L1 — DBSCAN 과밀 탐지</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> 과밀 클러스터 SKT 매장</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#E51937"></div> 일반 SKT 매장</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#3b82f6"></div> KT 매장</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#10b981"></div> LGU+ 매장</div>
-      <div style="font-size:9px;color:#9ca3af;margin-top:6px;">보라 점선 원 = 과밀 클러스터 영역</div>
-    `,
-    2: `
-      <div class="legend-title">L2 — Isolation Forest</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> 이상 패턴 탐지 매장</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> 과밀 클러스터 매장</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#E51937"></div> 일반 SKT 매장</div>
-    `,
-    3: `
-      <div class="legend-title">L3 — Huff 시뮬레이션</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#ef4444;width:14px;height:14px;border:2px solid white"></div> 폐점 후보 (복수신호)</div>
-      <div style="font-size:10px;color:#6b7280;margin-top:4px;">클릭 시 수요 재배분 상세 확인</div>
-    `,
-    4: `
-      <div class="legend-title">L4 — 종합 신호</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#ef4444;width:14px;height:14px;border:2px solid white"></div> 복수 신호 폐점 검토 대상</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> L1 과밀</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> L2 이상</div>
-      <div style="font-size:9px;color:#9ca3af;margin-top:6px;">신호는 참고 지표. 사람이 최종 판단.</div>
-    `,
-  };
-  document.getElementById('mapLegend').innerHTML = legends[currentLayer] || legends[4];
+function verdictBadge(verdict) {
+  if (verdict === '폐점 유력')   return `<span class="verdict urgent">폐점 유력</span>`;
+  if (verdict === '조건부 검토') return `<span class="verdict review">조건부 검토</span>`;
+  if (verdict === '관찰')        return `<span class="verdict watch">관찰</span>`;
+  return '';
 }
 
 init();
