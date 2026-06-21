@@ -5,7 +5,7 @@ Layer 2: Isolation Forest (이상 패턴 탐지)
 Layer 3: Huff 모델 (폐점 영향 시뮬레이션)
 Layer 4: 요약 및 신호 생성
 
-※ 매장 위치: 실제 서울/수도권 상권 좌표 기반 (성능 데이터는 시뮬레이션)
+※ 매장 위치: SKT/KT/LGU+ 모두 실제 데이터 (성능 데이터는 시뮬레이션)
 """
 
 import json, math, random, os
@@ -17,54 +17,97 @@ from sklearn.preprocessing import StandardScaler
 random.seed(42)
 np.random.seed(42)
 
-# ─── 실제 KT/LGU+ 매장 데이터 로드 ──────────────────────────────────────────
-def load_real_competitor_stores():
+# ─── 실제 매장 데이터 로드 ────────────────────────────────────────────────────
+BASE_DIR = os.path.dirname(__file__)
+METRO_BBOX = (37.0, 38.0, 126.5, 127.7)  # 수도권 lat/lng 범위
+
+def _in_metro(lat, lng):
+    return METRO_BBOX[0] <= lat <= METRO_BBOX[1] and METRO_BBOX[2] <= lng <= METRO_BBOX[3]
+
+def _nearest_zone(lat, lng):
+    # haversine은 아래 정의되어 있으나 import 순서 무관 (같은 모듈)
+    best, best_dist = COMMERCIAL_ZONES[0], float('inf')
+    for z in COMMERCIAL_ZONES:
+        dlat = math.radians(z['lat'] - lat)
+        dlng = math.radians(z['lng'] - lng)
+        a = math.sin(dlat/2)**2 + math.cos(math.radians(lat)) * math.cos(math.radians(z['lat'])) * math.sin(dlng/2)**2
+        d = 6371 * 2 * math.asin(math.sqrt(a))
+        if d < best_dist:
+            best, best_dist = z, d
+    return best, best_dist
+
+def load_real_stores():
+    """SKT + KT + LGU+ 실제 데이터 로드. SKT는 성능 데이터를 상권 기반으로 시뮬레이션."""
     stores = []
 
-    kt_path = os.path.join(os.path.dirname(__file__), 'kt_stores.json')
+    # SKT
+    skt_path = os.path.join(BASE_DIR, 'skt_stores.json')
+    if os.path.exists(skt_path):
+        with open(skt_path, encoding='utf-8') as f:
+            skt_raw = json.load(f)
+        for s in skt_raw:
+            if not _in_metro(s['lat'], s['lng']):
+                continue
+            zone, dist_km = _nearest_zone(s['lat'], s['lng'])
+            # 상권 거리에 따른 유동인구 감쇠 (2km 이상이면 저하)
+            proximity_factor = max(0.3, 1.0 - dist_km * 0.15)
+            foot = zone['foot_traffic'] * proximity_factor
+
+            foot_factor = foot / 100
+            monthly_subs = max(5, int(random.gauss(45 * foot_factor, 12)))
+            ltv_per_sub = random.gauss(380000, 80000)
+            op_cost = random.gauss(8500000, 2000000) * (1 + (1 - foot_factor) * 0.3)
+            monthly_revenue = monthly_subs * (ltv_per_sub / 24)
+            ms_share = max(0.25, min(0.65, 0.43 + random.gauss(0, 0.04)))
+
+            stores.append({
+                'store_id': s['store_id'],
+                'carrier': 'SKT',
+                'store_name': s['store_name'],
+                'address': s.get('address', ''),
+                'lat': s['lat'],
+                'lng': s['lng'],
+                'zone': zone['name'],
+                'zone_type': zone['type'],
+                'foot_traffic_score': round(foot, 1),
+                'monthly_subs': monthly_subs,
+                'monthly_profit_krw': round(monthly_revenue - op_cost),
+                'ms_share': round(ms_share, 3),
+                'op_cost_monthly': round(op_cost),
+                'is_real': True,
+            })
+
+    # KT
+    kt_path = os.path.join(BASE_DIR, 'kt_stores.json')
     if os.path.exists(kt_path):
         with open(kt_path, encoding='utf-8') as f:
-            kt = json.load(f)
-        # 수도권 필터 (lat 37.0~38.0, lng 126.5~127.7)
-        for s in kt:
-            if 37.0 <= s['lat'] <= 38.0 and 126.5 <= s['lng'] <= 127.7:
-                stores.append({
-                    'store_id': s['store_id'],
-                    'carrier': 'KT',
-                    'store_name': s['store_name'],
-                    'lat': s['lat'],
-                    'lng': s['lng'],
-                    'zone': '실제데이터',
-                    'zone_type': 'real',
-                    'foot_traffic_score': 60,
-                    'monthly_subs': None,
-                    'monthly_profit_krw': None,
-                    'ms_share': None,
-                    'op_cost_monthly': None,
-                    'is_real': True,
-                })
+            for s in json.load(f):
+                if _in_metro(s['lat'], s['lng']):
+                    stores.append({
+                        'store_id': s['store_id'], 'carrier': 'KT',
+                        'store_name': s['store_name'],
+                        'lat': s['lat'], 'lng': s['lng'],
+                        'zone': '실제데이터', 'zone_type': 'real',
+                        'foot_traffic_score': 60,
+                        'monthly_subs': None, 'monthly_profit_krw': None,
+                        'ms_share': None, 'op_cost_monthly': None, 'is_real': True,
+                    })
 
-    lgu_path = os.path.join(os.path.dirname(__file__), 'lgu_stores.json')
+    # LGU+
+    lgu_path = os.path.join(BASE_DIR, 'lgu_stores.json')
     if os.path.exists(lgu_path):
         with open(lgu_path, encoding='utf-8') as f:
-            lgu = json.load(f)
-        for s in lgu:
-            if 37.0 <= s['lat'] <= 38.0 and 126.5 <= s['lng'] <= 127.7:
-                stores.append({
-                    'store_id': s['store_id'],
-                    'carrier': 'LGU',
-                    'store_name': s['store_name'],
-                    'lat': s['lat'],
-                    'lng': s['lng'],
-                    'zone': '실제데이터',
-                    'zone_type': 'real',
-                    'foot_traffic_score': 60,
-                    'monthly_subs': None,
-                    'monthly_profit_krw': None,
-                    'ms_share': None,
-                    'op_cost_monthly': None,
-                    'is_real': True,
-                })
+            for s in json.load(f):
+                if _in_metro(s['lat'], s['lng']):
+                    stores.append({
+                        'store_id': s['store_id'], 'carrier': 'LGU',
+                        'store_name': s['store_name'],
+                        'lat': s['lat'], 'lng': s['lng'],
+                        'zone': '실제데이터', 'zone_type': 'real',
+                        'foot_traffic_score': 60,
+                        'monthly_subs': None, 'monthly_profit_krw': None,
+                        'ms_share': None, 'op_cost_monthly': None, 'is_real': True,
+                    })
 
     return stores
 
@@ -102,72 +145,11 @@ def haversine(lat1, lng1, lat2, lng2):
     return R * 2 * math.asin(math.sqrt(a))
 
 def generate_stores():
-    stores = []
-    store_id = 1
-
-    # 경쟁사는 실제 데이터 사용
-    real_competitors = load_real_competitor_stores()
-    stores.extend(real_competitors)
-    kt_count = sum(1 for s in real_competitors if s['carrier'] == 'KT')
-    lgu_count = sum(1 for s in real_competitors if s['carrier'] == 'LGU')
-    print(f"  실제 경쟁사 데이터 로드: KT {kt_count}개, LGU+ {lgu_count}개")
-
-    carrier_specs = {
-        "SKT": {"share": 0.43, "color": "#E51937"},
-    }
-
-    for carrier, spec in carrier_specs.items():
-        for zone in COMMERCIAL_ZONES:
-            # 상권 규모에 따른 매장 수 (실제 통신사 밀도 반영)
-            if zone["type"] == "premium":
-                n = random.randint(5, 9) if carrier == "SKT" else random.randint(3, 6)
-            elif zone["type"] == "high":
-                n = random.randint(3, 6) if carrier == "SKT" else random.randint(2, 4)
-            elif zone["type"] == "mid":
-                n = random.randint(2, 4) if carrier == "SKT" else random.randint(1, 3)
-            else:
-                n = random.randint(1, 3)
-
-            for _ in range(n):
-                # 상권 중심에서 약간 분산
-                spread = 0.008 if zone["type"] == "premium" else 0.015
-                lat = zone["lat"] + random.gauss(0, spread)
-                lng = zone["lng"] + random.gauss(0, spread)
-
-                # 성능 데이터 (시뮬레이션) — SKT만 상세
-                if carrier == "SKT":
-                    foot_factor = zone["foot_traffic"] / 100
-                    monthly_subs = int(random.gauss(45 * foot_factor, 12))
-                    monthly_subs = max(5, monthly_subs)
-                    ltv_per_sub = random.gauss(380000, 80000)
-                    op_cost_monthly = random.gauss(8500000, 2000000) * (1 + (1 - foot_factor) * 0.3)
-                    monthly_revenue = monthly_subs * (ltv_per_sub / 24)
-                    monthly_profit = monthly_revenue - op_cost_monthly
-                    ms_share = spec["share"] + random.gauss(0, 0.04)
-                    ms_share = max(0.25, min(0.65, ms_share))
-                else:
-                    monthly_subs = None
-                    monthly_profit = None
-                    ms_share = None
-                    op_cost_monthly = None
-
-                stores.append({
-                    "store_id": f"{carrier}-{store_id:04d}",
-                    "carrier": carrier,
-                    "store_name": f"{zone['name']} {carrier}대리점{_+1}호",
-                    "zone": zone["name"],
-                    "zone_type": zone["type"],
-                    "lat": round(lat, 6),
-                    "lng": round(lng, 6),
-                    "foot_traffic_score": zone["foot_traffic"],
-                    # SKT only
-                    "monthly_subs": monthly_subs,
-                    "monthly_profit_krw": round(monthly_profit) if monthly_profit else None,
-                    "ms_share": round(ms_share, 3) if ms_share else None,
-                    "op_cost_monthly": round(op_cost_monthly) if op_cost_monthly else None,
-                })
-                store_id += 1
-
+    stores = load_real_stores()
+    skt = [s for s in stores if s['carrier'] == 'SKT']
+    kt  = [s for s in stores if s['carrier'] == 'KT']
+    lgu = [s for s in stores if s['carrier'] == 'LGU']
+    print(f"  실제 데이터 로드: SKT {len(skt)}개, KT {len(kt)}개, LGU+ {len(lgu)}개")
     return stores
 
 # ─── LAYER 1: DBSCAN 과밀 구역 탐지 ─────────────────────────────────────────
@@ -336,7 +318,7 @@ if __name__ == "__main__":
     skt = [s for s in stores if s["carrier"] == "SKT"]
     kt  = [s for s in stores if s["carrier"] == "KT"]
     lgu = [s for s in stores if s["carrier"] == "LGU"]
-    print(f"매장 현황: SKT {len(skt)}개(시뮬레이션), KT {len(kt)}개(실제), LGU+ {len(lgu)}개(실제)\n")
+    print(f"매장 현황: SKT {len(skt)}개(실제 위치·시뮬레이션 성능), KT {len(kt)}개(실제), LGU+ {len(lgu)}개(실제)\n")
 
     skt, overcrowded = layer1_dbscan(stores)
     print()
@@ -354,7 +336,7 @@ if __name__ == "__main__":
             "overcrowded_clusters": len(overcrowded),
             "anomaly_stores": sum(1 for s in skt if s.get("if_anomaly")),
             "closure_candidates": len(signal_results),
-            "data_note": "KT/LGU+ 위치 실제 데이터 (2025.06 수집). SKT 위치 시뮬레이션. 성능지표(LTV/손익/M/S) 전부 시뮬레이션.",
+            "data_note": "SKT/KT/LGU+ 위치 모두 실제 데이터 (2025.06 수집). SKT 성능지표(LTV/손익/M/S)는 상권 기반 시뮬레이션.",
         },
         "all_stores": stores,
         "closure_candidates": signal_results,
