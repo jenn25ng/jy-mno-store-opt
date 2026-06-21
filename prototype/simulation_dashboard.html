@@ -47,6 +47,17 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 }
 .tab.active { color: #E51937; border-bottom-color: #E51937; font-weight: 700; }
 
+/* LIST CONTROLS (정렬 / 지역 필터) */
+.list-controls { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+.list-controls select {
+  min-width: 0; font-size: 11px; padding: 6px 8px;
+  border: 1px solid #e5e7eb; border-radius: 6px; background: white;
+  color: #374151; cursor: pointer; font-family: inherit;
+}
+.list-controls .ctrl-sort { flex: 1 1 100%; }
+.list-controls select:disabled { color: #cbd5e1; background: #f9fafb; cursor: not-allowed; }
+.list-empty { padding: 20px; text-align: center; color: #9ca3af; font-size: 13px; }
+
 .store-list { padding: 8px; flex: 1; }
 
 /* VERDICT BADGE */
@@ -182,6 +193,16 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
       <div class="tab" onclick="switchTab('review')">조건부 검토</div>
       <div class="tab" onclick="switchTab('all')">전체 매장</div>
     </div>
+    <div class="list-controls">
+      <select class="ctrl-sort" id="sortSelect" onchange="setSort(this.value)" title="정렬 기준">
+        <option value="profit_asc">월손익 — 적자 큰 순</option>
+        <option value="subs_desc">월순증 — 많은 순</option>
+        <option value="subs_asc">월순증 — 적은 순</option>
+        <option value="risk_desc">위험신호 — 렌즈 많은 순</option>
+        <option value="name_asc">매장명 — 가나다순</option>
+        <option value="zone_asc">상권 — 가나다순</option>
+      </select>
+    </div>
     <div id="storeList" class="store-list"></div>
   </div>
 
@@ -208,6 +229,8 @@ let DATA = null, map = null;
 let markers = [], clusterCircles = [];
 let currentTab = 'urgent', currentMapView = 'all';
 let selectedStoreId = null;
+let currentSort = 'profit_asc';
+let candById = {};
 
 // 동일 store_id 완전중복 제거 (LGU 원천데이터에 348건 중복 존재) — 선택 시 find() 오선택 방지
 function dedupeStores(stores) {
@@ -228,6 +251,7 @@ async function init() {
   try {
     DATA = await fetch('simulation_results.json').then(r => r.json());
     DATA.all_stores = dedupeStores(DATA.all_stores);
+    candById = Object.fromEntries(DATA.closure_candidates.map(c => [c.store_id, c]));
     renderKPIs();
     renderStoreList();
     renderMap();
@@ -269,26 +293,53 @@ function switchTab(tab) {
   renderStoreList();
 }
 
+function setSort(value) {
+  currentSort = value;
+  renderStoreList();
+}
+
+// 위험신호 점수 = 충족한 렌즈 개수(0~3). 후보가 아닌 매장은 -1로 맨 아래 정렬.
+function riskScore(it) {
+  if (it.lens_passed != null) return it.lens_passed;
+  const c = candById[it.store_id];
+  return c ? c.lens_passed : -1;
+}
+
+function sortItems(items) {
+  const arr = [...items];
+  const num = x => (x == null ? 0 : x);
+  const ko = (a, b) => (a || '').localeCompare(b || '', 'ko');
+  switch (currentSort) {
+    case 'profit_asc': arr.sort((a, b) => num(a.monthly_profit_krw) - num(b.monthly_profit_krw)); break;
+    case 'subs_desc':  arr.sort((a, b) => num(b.monthly_subs) - num(a.monthly_subs)); break;
+    case 'subs_asc':   arr.sort((a, b) => num(a.monthly_subs) - num(b.monthly_subs)); break;
+    case 'risk_desc':  arr.sort((a, b) => riskScore(b) - riskScore(a)); break;
+    case 'name_asc':   arr.sort((a, b) => ko(a.store_name, b.store_name)); break;
+    case 'zone_asc':   arr.sort((a, b) => ko(a.zone, b.zone)); break;
+  }
+  return arr;
+}
+
 function renderStoreList() {
   const list = document.getElementById('storeList');
-  let items;
+  let items, isAll = false;
 
   if (currentTab === 'urgent') {
     items = DATA.closure_candidates.filter(c => c.verdict === '폐점 유력');
-    if (!items.length) {
-      list.innerHTML = '<div style="padding:20px;text-align:center;color:#9ca3af;font-size:13px;">해당 매장 없음</div>';
-      return;
-    }
-    list.innerHTML = items.map(c => candidateCard(c)).join('');
-
   } else if (currentTab === 'review') {
     items = DATA.closure_candidates.filter(c => c.verdict === '조건부 검토');
-    list.innerHTML = items.map(c => candidateCard(c)).join('');
-
   } else {
-    const skt = DATA.all_stores.filter(s => s.carrier === 'SKT');
-    list.innerHTML = skt.map(s => miniCard(s)).join('');
+    items = DATA.all_stores.filter(s => s.carrier === 'SKT');
+    isAll = true;
   }
+
+  items = sortItems(items);
+
+  if (!items.length) {
+    list.innerHTML = '<div class="list-empty">해당 매장 없음</div>';
+    return;
+  }
+  list.innerHTML = items.map(it => isAll ? miniCard(it) : candidateCard(it)).join('');
 }
 
 function verdictBadge(verdict) {
