@@ -254,7 +254,8 @@ async function init() {
   }).addTo(map);
 
   try {
-    DATA = await fetch('simulation_results.json').then(r => r.json());
+    // no-cache: 서버에 항상 재검증 요청 → 데이터 갱신 시 옛 캐시로 인한 불일치(예: verdict 라벨 변경) 방지
+    DATA = await fetch('simulation_results.json', { cache: 'no-cache' }).then(r => r.json());
     DATA.all_stores = dedupeStores(DATA.all_stores);
     candById = Object.fromEntries(DATA.closure_candidates.map(c => [c.store_id, c]));
     storeById = Object.fromEntries(DATA.all_stores.map(s => [s.store_id, s]));
