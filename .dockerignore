@@ -1,0 +1,11 @@
+.git
+.claude
+.superpowers
+__pycache__
+*.pyc
+.env
+.DS_Store
+docs
+VIBE_CODING_GUIDE.md
+DATA_GATEWAY_VIBE_GUIDE.md
+README.md
