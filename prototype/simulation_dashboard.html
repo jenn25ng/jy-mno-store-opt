@@ -278,7 +278,7 @@ function renderKPIs() {
       <div class="kpi-label">전체 매장</div>
     </div>
     <div class="kpi-cell">
-      <div class="kpi-num danger">${vc['폐점 유력'] || 0}</div>
+      <div class="kpi-num danger">${vc['정리 유력'] || 0}</div>
       <div class="kpi-label">정리 유력</div>
     </div>
     <div class="kpi-cell">
@@ -422,7 +422,7 @@ function renderStoreList() {
   let items, isAll = false;
 
   if (currentTab === 'urgent') {
-    items = DATA.closure_candidates.filter(c => c.verdict === '폐점 유력');
+    items = DATA.closure_candidates.filter(c => c.verdict === '정리 유력');
   } else if (currentTab === 'review') {
     items = DATA.closure_candidates.filter(c => c.verdict === '조건부 검토');
   } else {
@@ -441,7 +441,7 @@ function renderStoreList() {
 }
 
 function verdictBadge(verdict) {
-  if (verdict === '폐점 유력')   return `<span class="verdict urgent">정리 유력</span>`;
+  if (verdict === '정리 유력')   return `<span class="verdict urgent">정리 유력</span>`;
   if (verdict === '조건부 검토') return `<span class="verdict review">조건부 검토</span>`;
   if (verdict === '관찰')        return `<span class="verdict watch">관찰</span>`;
   return '';
@@ -519,7 +519,7 @@ function renderMap() {
   clusterCircles.forEach(c => map.removeLayer(c));
   markers = []; clusterCircles = [];
 
-  const urgentIds = new Set(DATA.closure_candidates.filter(c => c.verdict === '폐점 유력').map(c => c.store_id));
+  const urgentIds = new Set(DATA.closure_candidates.filter(c => c.verdict === '정리 유력').map(c => c.store_id));
   const reviewIds = new Set(DATA.closure_candidates.filter(c => c.verdict === '조건부 검토').map(c => c.store_id));
   const candMap   = Object.fromEntries(DATA.closure_candidates.map(c => [c.store_id, c]));
 
@@ -711,7 +711,7 @@ function closeDetail() {
 }
 
 function verdictBadge(verdict) {
-  if (verdict === '폐점 유력')   return `<span class="verdict urgent">정리 유력</span>`;
+  if (verdict === '정리 유력')   return `<span class="verdict urgent">정리 유력</span>`;
   if (verdict === '조건부 검토') return `<span class="verdict review">조건부 검토</span>`;
   if (verdict === '관찰')        return `<span class="verdict watch">관찰</span>`;
   return '';

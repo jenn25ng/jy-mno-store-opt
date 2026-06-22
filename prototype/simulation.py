@@ -364,7 +364,7 @@ def judge_lenses(store, thresholds=None):
 
     passed = sum([profitability, ms_defense, coverage])
     if passed == 3:
-        verdict = "폐점 유력"
+        verdict = "정리 유력"
     elif passed == 2:
         verdict = "조건부 검토"
     elif passed == 1:
@@ -407,7 +407,7 @@ def aggregate_results(skt_stores, thresholds=None):
         })
 
     results.sort(key=lambda x: (-x["lens_passed"], x.get("monthly_profit_krw") or 0))
-    print(f"[판정] 폐점 유력: {sum(1 for r in results if r['verdict']=='폐점 유력')}개 | "
+    print(f"[판정] 정리 유력: {sum(1 for r in results if r['verdict']=='정리 유력')}개 | "
           f"조건부: {sum(1 for r in results if r['verdict']=='조건부 검토')}개 | "
           f"관찰: {sum(1 for r in results if r['verdict']=='관찰')}개")
     return results
@@ -446,7 +446,7 @@ if __name__ == "__main__":
             "overcrowded_clusters": len(overcrowded),
             "anomaly_stores": sum(1 for s in skt if s.get("if_anomaly")),
             "verdict_counts": {
-                "폐점 유력": sum(1 for r in results if r["verdict"] == "폐점 유력"),
+                "정리 유력": sum(1 for r in results if r["verdict"] == "정리 유력"),
                 "조건부 검토": sum(1 for r in results if r["verdict"] == "조건부 검토"),
                 "관찰": sum(1 for r in results if r["verdict"] == "관찰"),
             },
@@ -462,12 +462,12 @@ if __name__ == "__main__":
         json.dump(output, f, ensure_ascii=False, indent=2, default=default_serializer)
 
     print(f"\n=== 결과 ===")
-    for verdict in ["폐점 유력", "조건부 검토", "관찰"]:
+    for verdict in ["정리 유력", "조건부 검토", "관찰"]:
         count = output["summary"]["verdict_counts"][verdict]
         print(f"  {verdict}: {count}개")
 
     print("\nTOP 폐점 검토 후보:")
-    for r in [x for x in results if x["verdict"] == "폐점 유력"][:5]:
+    for r in [x for x in results if x["verdict"] == "정리 유력"][:5]:
         profit_str = f"{r['monthly_profit_krw']//10000:+,}만원" if r["monthly_profit_krw"] else "N/A"
         print(f"  [{r['store_id']}] {r['store_name']}")
         print(f"    손익:{profit_str} | 흡수율:{r['huff_absorption_rate']:.0%} | 클러스터:{r['dbscan_cluster_size']}개")
