@@ -190,7 +190,7 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
   <div class="left-panel">
     <div class="kpi-strip" id="kpiStrip"></div>
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('urgent')">정리 우선</div>
+      <div class="tab active" onclick="switchTab('urgent')">폐점 유력</div>
       <div class="tab" onclick="switchTab('review')">조건부 검토</div>
       <div class="tab" onclick="switchTab('all')">전체 매장</div>
     </div>
@@ -278,7 +278,7 @@ function renderKPIs() {
     </div>
     <div class="kpi-cell">
       <div class="kpi-num danger">${vc['폐점 유력'] || 0}</div>
-      <div class="kpi-label">정리 우선</div>
+      <div class="kpi-label">폐점 유력</div>
     </div>
     <div class="kpi-cell">
       <div class="kpi-num warn">${vc['조건부 검토'] || 0}</div>
@@ -400,7 +400,7 @@ function renderStoreList() {
 }
 
 function verdictBadge(verdict) {
-  if (verdict === '폐점 유력')   return `<span class="verdict urgent">정리 우선</span>`;
+  if (verdict === '폐점 유력')   return `<span class="verdict urgent">폐점 유력</span>`;
   if (verdict === '조건부 검토') return `<span class="verdict review">조건부 검토</span>`;
   if (verdict === '관찰')        return `<span class="verdict watch">관찰</span>`;
   return '';
@@ -556,7 +556,7 @@ function renderLegend() {
   const legends = {
     all: `
       <div class="legend-title">판정 결과</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#E51937;width:13px;height:13px;border:2px solid #fff;box-shadow:0 0 0 1px #E51937"></div> 정리 우선</div>
+      <div class="legend-row"><div class="legend-dot" style="background:#E51937;width:13px;height:13px;border:2px solid #fff;box-shadow:0 0 0 1px #E51937"></div> 폐점 유력</div>
       <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> 조건부 검토</div>
       <div class="legend-row"><div class="legend-dot" style="background:#E51937;opacity:0.4"></div> 일반 SKT 매장</div>
       <div class="legend-row"><div class="legend-dot" style="background:#3b82f6"></div> KT</div>
@@ -637,7 +637,7 @@ function showDetail(store) {
   let huffHtml = '';
   if (cand?.huff_redistribution?.length) {
     huffHtml = `
-      <div style="font-size:11px;font-weight:700;color:#9ca3af;margin:10px 0 6px">정리 시 고객 이동 예상</div>
+      <div style="font-size:11px;font-weight:700;color:#9ca3af;margin:10px 0 6px">폐점 시 고객 이동 예상</div>
       <div style="font-size:10px;color:#9ca3af;margin-bottom:6px">25% 이탈 추정 (${cand.huff_lost_subs}건) · 나머지는 아래 매장으로</div>
       <table class="huff-table">
         ${[...cand.huff_redistribution].sort((a,b) => a.distance_km - b.distance_km).map(h => `
@@ -670,7 +670,7 @@ function closeDetail() {
 }
 
 function verdictBadge(verdict) {
-  if (verdict === '폐점 유력')   return `<span class="verdict urgent">정리 우선</span>`;
+  if (verdict === '폐점 유력')   return `<span class="verdict urgent">폐점 유력</span>`;
   if (verdict === '조건부 검토') return `<span class="verdict review">조건부 검토</span>`;
   if (verdict === '관찰')        return `<span class="verdict watch">관찰</span>`;
   return '';
