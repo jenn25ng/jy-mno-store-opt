@@ -200,14 +200,16 @@ def generate_stores():
 
 # ─── 임계값 설정 (의사결정자가 조정 가능) ────────────────────────────────────
 DEFAULT_THRESHOLDS = {
+    # 임계값 캘리브레이션: '정리 유력'이 전체의 ~5%(소수 정예)가 되도록 세 렌즈를 고루 상향.
+    # (느슨하면 21%까지 잡혀 신뢰도 저하 → 5% 내외로 조정)
+
     # 수익성 렌즈: 월 손익 적자 AND Isolation Forest 이상 탐지
-    "profitability_max_profit_krw": 0,          # 월 손익 기준 (0 = 적자만)
-    "profitability_if_score_max": -0.05,        # anomaly score 상한 (낮을수록 이상)
+    "profitability_max_profit_krw": -800_000,   # 월 손익 -80만원 미만(뚜렷한 적자)
+    "profitability_if_score_max": -0.08,        # anomaly score 상한 (낮을수록 이상)
 
     # M/S 방어 렌즈: Huff 흡수율 + 인근 SKT 매장 수
-    # SKT 시장점유율 ~40% → 3사 경쟁 환경에서 35% 이상이면 '방어 가능' 판정
-    "ms_min_absorption_rate": 0.35,             # 인근 SKT 매장 흡수율 35% 이상
-    "ms_min_nearby_skt": 2,                     # 반경 2km 내 SKT 매장 최소 수
+    "ms_min_absorption_rate": 0.50,             # 인근 SKT 매장 흡수율 50% 이상
+    "ms_min_nearby_skt": 3,                     # 반경 2km 내 SKT 매장 최소 수
 
     # 커버리지 렌즈: 클러스터 내 매장 수
     "coverage_min_cluster_size": 3,             # 같은 클러스터 내 SKT 매장 3개 이상
