@@ -132,6 +132,12 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 .lens-btn:last-child { border-right: none; }
 .lens-btn.active { background: #E51937; color: white; font-weight: 700; }
 .lens-btn:not(.active):hover { background: #f9fafb; }
+/* 분석 뷰(라디오)와 경쟁사 토글(독립) 구분선 */
+.lens-sep { width: 1px; background: #d1d5db; align-self: stretch; }
+/* 경쟁사 표시 토글: 켜짐=carrier 색, 꺼짐=회색. (.lens-btn.active의 빨강을 색상별로 덮어씀) */
+.lens-btn.carrier-toggle::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+.lens-btn.carrier-toggle.kt.active  { background: #3b82f6; color: white; font-weight: 700; }
+.lens-btn.carrier-toggle.lgu.active { background: #10b981; color: white; font-weight: 700; }
 
 /* MAP LEGEND */
 .map-legend {
@@ -215,6 +221,9 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
       <div class="lens-btn" id="lbProfit" onclick="setMapView('profit')">수익성 미달</div>
       <div class="lens-btn" id="lbMs" onclick="setMapView('ms')">M/S 방어 가능</div>
       <div class="lens-btn" id="lbCoverage" onclick="setMapView('coverage')">커버리지 여유</div>
+      <span class="lens-sep"></span>
+      <div class="lens-btn carrier-toggle kt active" id="tgKT" onclick="toggleCarrier('KT')">KT</div>
+      <div class="lens-btn carrier-toggle lgu active" id="tgLGU" onclick="toggleCarrier('LGU')">LG U+</div>
     </div>
 
     <div class="map-legend" id="mapLegend"></div>
@@ -229,6 +238,7 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 let DATA = null, map = null;
 let markers = [], clusterCircles = [];
 let currentTab = 'urgent', currentMapView = 'all';
+let showKT = true, showLGU = true;   // 경쟁사 마커 표시 토글
 let selectedStoreId = null;
 let currentSort = 'profit_asc';
 let currentSido = '', currentGu = '', currentDong = '';
@@ -506,6 +516,18 @@ function setMapView(view) {
   renderLegend();
 }
 
+// 경쟁사(KT/LGU) 마커 표시 on/off — 분석 뷰와 독립적인 토글
+function toggleCarrier(carrier) {
+  if (carrier === 'KT') {
+    showKT = !showKT;
+    document.getElementById('tgKT').classList.toggle('active', showKT);
+  } else {
+    showLGU = !showLGU;
+    document.getElementById('tgLGU').classList.toggle('active', showLGU);
+  }
+  renderMap();
+}
+
 function renderMap() {
   markers.forEach(m => map.removeLayer(m));
   clusterCircles.forEach(c => map.removeLayer(c));
@@ -522,6 +544,10 @@ function renderMap() {
   );
 
   renderOrder.forEach(store => {
+    // 경쟁사 토글이 꺼져 있으면 해당 마커는 그리지 않음
+    if (store.carrier === 'KT'  && !showKT)  { store._marker = null; return; }
+    if (store.carrier === 'LGU' && !showLGU) { store._marker = null; return; }
+
     let color = '#d1d5db', radius = 5, opacity = 0.5, weight = 1, stroke = null;
 
     if (store.carrier === 'KT')  { color = '#3b82f6'; }
