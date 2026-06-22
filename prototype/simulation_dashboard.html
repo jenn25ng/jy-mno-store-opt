@@ -55,7 +55,7 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
   color: #374151; cursor: pointer; font-family: inherit;
 }
 .list-controls .ctrl-sort { flex: 1 1 100%; }
-.list-controls .ctrl-region { flex: 1 1 calc(50% - 3px); }
+.list-controls .ctrl-region { flex: 1 1 calc(33.333% - 4px); }
 .list-controls select:disabled { color: #cbd5e1; background: #f9fafb; cursor: not-allowed; }
 .list-empty { padding: 20px; text-align: center; color: #9ca3af; font-size: 13px; }
 
@@ -205,6 +205,7 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
       </select>
       <select class="ctrl-region" id="sidoSelect" onchange="setSido(this.value)" title="시/도"></select>
       <select class="ctrl-region" id="guSelect" onchange="setGu(this.value)" title="구/군" disabled></select>
+      <select class="ctrl-region" id="dongSelect" onchange="setDong(this.value)" title="동/읍/면" disabled></select>
     </div>
     <div id="storeList" class="store-list"></div>
   </div>
@@ -233,7 +234,7 @@ let markers = [], clusterCircles = [];
 let currentTab = 'urgent', currentMapView = 'all';
 let selectedStoreId = null;
 let currentSort = 'profit_asc';
-let currentSido = '', currentGu = '';
+let currentSido = '', currentGu = '', currentDong = '';
 let candById = {}, storeById = {};
 
 // 동일 store_id 완전중복 제거 (LGU 원천데이터에 348건 중복 존재) — 선택 시 find() 오선택 방지
@@ -304,9 +305,18 @@ function setSort(value) {
   renderStoreList();
 }
 
-// 주소(예: "서울 강남구 역삼동 12")에서 시/도·구를 파싱. 경쟁사는 주소가 없어 SKT만 대상.
+// 주소(예: "경기 고양시 덕양구 향동동 12")에서 시/도·구·동을 파싱. 경쟁사는 주소가 없어 SKT만 대상.
 function sidoOf(s) { return (s && s.address ? s.address : '').split(' ')[0] || ''; }
 function guOf(s)   { return (s && s.address ? s.address : '').split(' ')[1] || ''; }
+// 동/읍/면/가/리: 주소 토큰 수가 가변(3~5토큰)이라 위치가 아닌 접미사로 판정.
+// 번지(숫자)·시도(0번)를 제외하고 끝에서부터 행정동 토큰을 찾음. (구/군/시는 매칭 안 됨)
+function dongOf(s) {
+  const t = (s && s.address ? s.address : '').split(/\s+/).filter(Boolean);
+  for (let i = t.length - 1; i >= 1; i--) {
+    if (/[동읍면가리]$/.test(t[i])) return t[i];
+  }
+  return '';
+}
 
 function buildRegionFilters() {
   const sidos = [...new Set(
@@ -316,6 +326,7 @@ function buildRegionFilters() {
     '<option value="">전체 시/도</option>' +
     sidos.map(s => `<option value="${s}">${s}</option>`).join('');
   updateGuOptions();
+  updateDongOptions();
 }
 
 function updateGuOptions() {
@@ -333,15 +344,44 @@ function updateGuOptions() {
     gus.map(g => `<option value="${g}">${g}</option>`).join('');
 }
 
+// 동 옵션 = 선택된 시/도(+구가 선택됐으면 그 구)에 속한 매장들의 동 목록. 시/도 선택 시 활성화.
+function updateDongOptions() {
+  const sel = document.getElementById('dongSelect');
+  if (!currentSido) {
+    sel.innerHTML = '<option value="">동/읍/면 전체</option>';
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  const dongs = [...new Set(
+    DATA.all_stores.filter(s =>
+      s.carrier === 'SKT' &&
+      sidoOf(s) === currentSido &&
+      (!currentGu || guOf(s) === currentGu)
+    ).map(dongOf).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'ko'));
+  sel.innerHTML = '<option value="">동/읍/면 전체</option>' +
+    dongs.map(d => `<option value="${d}">${d}</option>`).join('');
+}
+
 function setSido(value) {
   currentSido = value;
   currentGu = '';
+  currentDong = '';
   updateGuOptions();
+  updateDongOptions();
   renderStoreList();
 }
 
 function setGu(value) {
   currentGu = value;
+  currentDong = '';
+  updateDongOptions();
+  renderStoreList();
+}
+
+function setDong(value) {
+  currentDong = value;
   renderStoreList();
 }
 
@@ -351,6 +391,7 @@ function inRegion(item) {
   const full = storeById[item.store_id] || item;
   if (sidoOf(full) !== currentSido) return false;
   if (currentGu && guOf(full) !== currentGu) return false;
+  if (currentDong && dongOf(full) !== currentDong) return false;
   return true;
 }
 
