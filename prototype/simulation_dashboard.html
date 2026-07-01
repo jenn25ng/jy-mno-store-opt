@@ -1,89 +1,124 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>매장 최적화 — SKT 유통혁신팀</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+/* ═══ MNO SYNAPSE 토큰 (단일 소스 · 라이트/다크) ═══ */
+:root {
+  --font-body: 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+:root[data-theme="light"] {
+  --bg:#FAFBFD; --panel:#FFFFFF; --warm:#F1F3F7; --side:#F4F6F9;
+  --line:#E2E6EF; --line-2:#CDD3E0;
+  --t0:#16182B; --t1:#3C4060; --t2:#6E7499; --t3:#9AA0C0;
+  --brand:#3617CE; --brand-2:#5B3FE8; --brand-soft:#E7E2FB;
+  --ok:#2E9E6B; --ok-soft:#E2F3EA; --warn:#B5821B; --warn-soft:#F8EFD8;
+  --alert:#D64B3F; --alert-soft:#FBE7E3;
+  --kt:#3E63DD; --lgu:#0F9E8E;
+  --shadow:0 1px 2px rgba(20,21,40,.05),0 10px 30px rgba(20,21,40,.07);
+  --glow:0 0 0 1px color-mix(in srgb,var(--brand) 35%,transparent),0 8px 22px color-mix(in srgb,var(--brand) 18%,transparent);
+}
+:root[data-theme="dark"] {
+  --bg:#0A0B16; --panel:#11132A; --warm:#161A38; --side:#0C0E20;
+  --line:#222845; --line-2:#313863;
+  --t0:#EEEFFA; --t1:#C2C6E0; --t2:#8C92B8; --t3:#5E6388;
+  --brand:#7E68FF; --brand-2:#9E8CFF; --brand-soft:#231C58;
+  --ok:#4FBE8C; --ok-soft:#0E2A1E; --warn:#E0A63A; --warn-soft:#2A2110;
+  --alert:#F4766A; --alert-soft:#2E1714;
+  --kt:#7AA0FF; --lgu:#3FD0BE;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 14px 36px rgba(0,0,0,.4);
+  --glow:0 0 0 1px color-mix(in srgb,var(--brand) 45%,transparent),0 8px 26px color-mix(in srgb,var(--brand) 35%,transparent);
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 900px; min-height: 900px; }
-body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; background: #f5f6f8; color: #1a1a2e; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--t0);
+  -webkit-font-smoothing: antialiased; transition: background .3s, color .3s; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 .header {
-  background: #E51937; color: white;
-  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+  background: var(--panel); color: var(--t0); border-bottom: 1px solid var(--line);
+  padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
 }
-.header-title { font-size: 17px; font-weight: 700; }
-.header-sub { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.header-left { display: flex; align-items: center; gap: 11px; }
+.brand-mark { width: 26px; height: 26px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-2)); position: relative; flex-shrink: 0; }
+.brand-mark::after { content: ''; position: absolute; inset: 8px; border-radius: 50%; background: var(--panel); }
+.header-title { font-size: 16px; font-weight: 700; letter-spacing: -.2px; }
+.header-sub { font-size: 11px; color: var(--t2); margin-top: 1px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
 .badge-sample {
-  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
-  padding: 4px 10px; border-radius: 20px; font-size: 11px;
+  background: var(--warm); border: 1px solid var(--line);
+  color: var(--t2); padding: 4px 11px; border-radius: 20px; font-size: 11px;
 }
+.theme-toggle {
+  width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--t1); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; transition: .15s;
+}
+.theme-toggle:hover { background: var(--warm); }
 
 .main { display: grid; grid-template-columns: 340px 1fr; height: calc(100vh - 56px); }
 
 /* LEFT */
-.left-panel { background: white; overflow-y: auto; border-right: 1px solid #e5e7eb; display: flex; flex-direction: column; }
+.left-panel { background: var(--panel); overflow-y: auto; border-right: 1px solid var(--line); display: flex; flex-direction: column; }
 
 .kpi-strip {
   display: grid; grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--line);
 }
-.kpi-cell { padding: 12px 8px; text-align: center; border-right: 1px solid #f0f0f0; cursor: pointer; transition: background 0.12s; }
+.kpi-cell { padding: 12px 8px; text-align: center; border-right: 1px solid var(--line); cursor: pointer; transition: background 0.12s; }
 .kpi-cell:last-child { border-right: none; }
-.kpi-cell:hover { background: #fafafa; }
-.kpi-cell.active { background: #fff5f6; box-shadow: inset 0 -3px 0 #E51937; }
-.kpi-num { font-size: 20px; font-weight: 800; }
-.kpi-num.danger { color: #E51937; }
-.kpi-num.warn { color: #f59e0b; }
-.kpi-num.neutral { color: #6b7280; }
-.kpi-label { font-size: 10px; color: #9ca3af; margin-top: 2px; }
-
-.tabs { display: flex; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
-.tab {
-  flex: 1; padding: 10px 6px; text-align: center; font-size: 12px;
-  cursor: pointer; color: #9ca3af; border-bottom: 2px solid transparent;
-  margin-bottom: -1px; transition: all 0.15s;
-}
-.tab.active { color: #E51937; border-bottom-color: #E51937; font-weight: 700; }
+.kpi-cell:hover { background: var(--warm); }
+.kpi-cell.active { background: var(--brand-soft); box-shadow: inset 0 -2px 0 var(--brand); }
+.kpi-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 700; letter-spacing: -.5px; color: var(--t1); }
+.kpi-num.danger { color: var(--alert); }
+.kpi-num.warn { color: var(--warn); }
+.kpi-num.neutral { color: var(--t1); }
+.kpi-label { font-size: 10px; color: var(--t3); margin-top: 3px; }
 
 /* LIST CONTROLS (정렬 / 지역 필터) */
-.list-controls { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border-bottom: 1px solid #f0f0f0; flex-shrink: 0; }
+.list-controls { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border-bottom: 1px solid var(--line); flex-shrink: 0; }
 .list-controls select {
   min-width: 0; font-size: 11px; padding: 6px 8px;
-  border: 1px solid #e5e7eb; border-radius: 6px; background: white;
-  color: #374151; cursor: pointer; font-family: inherit;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--panel);
+  color: var(--t1); cursor: pointer; font-family: inherit;
 }
+.list-controls select:hover { border-color: var(--line-2); }
 .list-controls .ctrl-sort { flex: 1 1 100%; }
 .list-controls .ctrl-region { flex: 1 1 calc(33.333% - 4px); }
-.list-controls select:disabled { color: #cbd5e1; background: #f9fafb; cursor: not-allowed; }
-.list-empty { padding: 20px; text-align: center; color: #9ca3af; font-size: 13px; }
+.list-controls select:disabled { color: var(--t3); background: var(--warm); cursor: not-allowed; }
+.list-empty { padding: 20px; text-align: center; color: var(--t3); font-size: 13px; }
 
 .store-list { padding: 8px; flex: 1; }
 
 /* VERDICT BADGE */
 .verdict {
   display: inline-block; font-size: 10px; font-weight: 700;
-  padding: 2px 8px; border-radius: 10px; flex-shrink: 0;
+  padding: 2px 8px; border-radius: 999px; flex-shrink: 0;
 }
-.verdict.urgent { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-.verdict.review { background: #fffbeb; color: #b45309; border: 1px solid #fde68a; }
-.verdict.watch  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.verdict.urgent { background: var(--alert-soft); color: var(--alert); border: 1px solid color-mix(in srgb,var(--alert) 40%,transparent); }
+.verdict.review { background: var(--warn-soft); color: var(--warn); border: 1px solid color-mix(in srgb,var(--warn) 40%,transparent); }
+.verdict.watch  { background: transparent; color: var(--t2); border: 1px solid var(--line-2); }
 
-/* STORE CARD */
+/* STORE CARD — 좌측 컬러바 없음, 활성=테두리+글로우 */
 .store-card {
-  border: 1px solid #e5e7eb; border-radius: 10px;
+  border: 1px solid var(--line); border-radius: 12px;
   padding: 11px 12px; margin-bottom: 7px; cursor: pointer;
-  transition: all 0.12s; background: white;
+  transition: border-color 0.12s, box-shadow 0.12s; background: var(--panel);
 }
-.store-card:hover { border-color: #E51937; box-shadow: 0 2px 8px rgba(229,25,55,0.1); }
-.store-card.selected { border-color: #E51937; background: #fff8f8; }
+.store-card:hover { border-color: var(--line-2); }
+.store-card.selected { border-color: var(--brand); box-shadow: var(--glow); }
 
 .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; gap: 8px; }
-.card-name { font-size: 13px; font-weight: 700; line-height: 1.3; }
-.card-zone { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.card-name { font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--t0); }
+.card-zone { font-size: 11px; color: var(--t3); margin-top: 2px; }
 
 /* LENS PILLS */
 .lens-row { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 7px; }
@@ -91,27 +126,28 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
   font-size: 10px; padding: 2px 7px; border-radius: 8px;
   display: flex; align-items: center; gap: 3px;
 }
-.lens-pill.pass { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-.lens-pill.fail { background: #fafafa; color: #9ca3af; border: 1px solid #e5e7eb; }
+.lens-pill.pass { background: var(--ok-soft); color: var(--ok); border: 1px solid color-mix(in srgb,var(--ok) 35%,transparent); }
+.lens-pill.fail { background: var(--warm); color: var(--t3); border: 1px solid var(--line); }
 
 /* METRICS */
 .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-.metric { background: #f9fafb; border-radius: 6px; padding: 5px 6px; text-align: center; }
-.metric-val { font-size: 12px; font-weight: 700; }
-.metric-val.neg { color: #ef4444; }
-.metric-val.pos { color: #10b981; }
-.metric-label { font-size: 9px; color: #9ca3af; margin-top: 1px; }
+.metric { background: var(--warm); border-radius: 8px; padding: 5px 6px; text-align: center; }
+.metric-val { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 12px; font-weight: 700; color: var(--t1); }
+.metric-val.neg { color: var(--alert); }
+.metric-val.pos { color: var(--ok); }
+.metric-label { font-size: 9px; color: var(--t3); margin-top: 1px; }
 
 /* MINI CARD */
 .mini-card {
-  border: 1px solid #e5e7eb; border-radius: 8px; padding: 9px 11px;
-  margin-bottom: 6px; cursor: pointer; background: white;
+  border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px;
+  margin-bottom: 6px; cursor: pointer; background: var(--panel);
   display: flex; justify-content: space-between; align-items: center;
+  transition: border-color 0.12s, box-shadow 0.12s;
 }
-.mini-card:hover { border-color: #d1d5db; }
-.mini-card.selected { border-color: #E51937; background: #fff8f8; }
-.mini-name { font-size: 12px; font-weight: 600; }
-.mini-sub { font-size: 10px; color: #9ca3af; margin-top: 2px; }
+.mini-card:hover { border-color: var(--line-2); }
+.mini-card.selected { border-color: var(--brand); box-shadow: var(--glow); }
+.mini-name { font-size: 12px; font-weight: 600; color: var(--t0); }
+.mini-sub { font-size: 10px; color: var(--t3); margin-top: 2px; }
 
 /* RIGHT: MAP */
 .right-panel { position: relative; }
@@ -120,78 +156,84 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 /* LENS FILTER BAR */
 .lens-bar {
   position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-  z-index: 1000; display: flex; gap: 0; background: white;
-  border-radius: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.12);
-  overflow: hidden; font-size: 11px; border: 1px solid #e5e7eb;
+  z-index: 1000; display: flex; gap: 0; background: var(--panel);
+  border-radius: 999px; box-shadow: var(--shadow);
+  overflow: hidden; font-size: 11px; border: 1px solid var(--line);
 }
 .lens-btn {
   padding: 7px 16px; display: flex; align-items: center; gap: 5px;
-  cursor: pointer; transition: background 0.15s; color: #6b7280;
-  border-right: 1px solid #e5e7eb;
+  cursor: pointer; transition: background 0.15s; color: var(--t2);
+  border-right: 1px solid var(--line);
 }
 .lens-btn:last-child { border-right: none; }
-.lens-btn.active { background: #E51937; color: white; font-weight: 700; }
-.lens-btn:not(.active):hover { background: #f9fafb; }
+.lens-btn.active { background: var(--brand); color: #fff; font-weight: 700; }
+.lens-btn:not(.active):hover { background: var(--warm); }
 /* 분석 뷰(라디오)와 경쟁사 토글(독립) 구분선 */
-.lens-sep { width: 1px; background: #d1d5db; align-self: stretch; }
-/* 경쟁사 표시 토글: 켜짐=carrier 색, 꺼짐=회색. (.lens-btn.active의 빨강을 색상별로 덮어씀) */
+.lens-sep { width: 1px; background: var(--line-2); align-self: stretch; }
+/* 경쟁사 표시 토글: 켜짐=carrier 색, 꺼짐=중립 */
 .lens-btn.carrier-toggle::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
-.lens-btn.carrier-toggle.kt.active  { background: #3b82f6; color: white; font-weight: 700; }
-.lens-btn.carrier-toggle.lgu.active { background: #10b981; color: white; font-weight: 700; }
+.lens-btn.carrier-toggle.kt.active  { background: var(--kt); color: #fff; font-weight: 700; }
+.lens-btn.carrier-toggle.lgu.active { background: var(--lgu); color: #fff; font-weight: 700; }
 
 /* MAP LEGEND */
 .map-legend {
   position: absolute; bottom: 20px; left: 10px; z-index: 1000;
-  background: white; border-radius: 10px; padding: 12px 14px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.12); font-size: 11px; min-width: 170px;
-  border: 1px solid #e5e7eb;
+  background: var(--panel); border-radius: 12px; padding: 12px 14px;
+  box-shadow: var(--shadow); font-size: 11px; min-width: 170px;
+  border: 1px solid var(--line); color: var(--t1);
 }
-.legend-title { font-weight: 700; margin-bottom: 8px; font-size: 12px; }
+.legend-title { font-weight: 700; margin-bottom: 8px; font-size: 12px; color: var(--t0); }
 .legend-row { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 /* DETAIL PANEL */
 .detail-overlay {
   position: absolute; top: 10px; right: 10px; z-index: 1000;
-  background: white; border-radius: 12px; padding: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 290px;
-  display: none; border: 1px solid #e5e7eb;
+  background: var(--panel); border-radius: 14px; padding: 16px;
+  box-shadow: var(--shadow); width: 290px;
+  display: none; border: 1px solid var(--line); color: var(--t1);
 }
 .detail-overlay.show { display: block; }
-.detail-close { position: absolute; top: 12px; right: 14px; cursor: pointer; color: #9ca3af; font-size: 16px; }
-.detail-name { font-size: 14px; font-weight: 800; margin-bottom: 3px; padding-right: 20px; }
-.detail-zone { font-size: 11px; color: #9ca3af; margin-bottom: 12px; }
+.detail-close { position: absolute; top: 12px; right: 14px; cursor: pointer; color: var(--t3); font-size: 16px; }
+.detail-name { font-size: 14px; font-weight: 800; margin-bottom: 3px; padding-right: 20px; color: var(--t0); }
+.detail-zone { font-size: 11px; color: var(--t3); margin-bottom: 12px; }
 
 .lens-block { margin-bottom: 8px; }
 .lens-check-row {
   display: flex; align-items: flex-start; gap: 8px;
   padding: 8px 10px; border-radius: 8px; margin-bottom: 4px;
 }
-.lens-check-row.pass { background: #f0fdf4; }
-.lens-check-row.fail { background: #f9fafb; }
+.lens-check-row.pass { background: var(--ok-soft); }
+.lens-check-row.fail { background: var(--warm); }
 .lens-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
-.lens-label { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
-.lens-desc { font-size: 11px; color: #6b7280; line-height: 1.4; }
+.lens-label { font-size: 12px; font-weight: 700; margin-bottom: 2px; color: var(--t0); }
+.lens-desc { font-size: 11px; color: var(--t2); line-height: 1.4; }
 
 .huff-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 6px; }
-.huff-table td { padding: 4px 0; border-bottom: 1px solid #f3f4f6; }
+.huff-table td { padding: 4px 0; border-bottom: 1px solid var(--line); }
 .huff-table tr:last-child td { border-bottom: none; }
 
 .notice {
-  margin-top: 10px; padding: 8px 10px; background: #fafafa;
-  border-radius: 7px; font-size: 10px; color: #9ca3af;
-  border: 1px solid #f3f4f6; line-height: 1.5;
+  margin-top: 10px; padding: 8px 10px; background: var(--warm);
+  border-radius: 8px; font-size: 10px; color: var(--t2);
+  border: 1px solid var(--line); line-height: 1.5;
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div>
-    <div class="header-title">매장 최적화</div>
-    <div class="header-sub">SKT 유통혁신팀 | 수익성 · M/S 방어 · 커버리지 3가지 기준으로 판단</div>
+  <div class="header-left">
+    <span class="brand-mark"></span>
+    <div>
+      <div class="header-title">매장 최적화</div>
+      <div class="header-sub">SKT 유통혁신팀 · 수익성 · M/S 방어 · 커버리지 3가지 기준으로 판단</div>
+    </div>
   </div>
-  <div class="badge-sample">위치 실제 데이터 · 성능 시뮬레이션</div>
+  <div class="header-right">
+    <div class="badge-sample">위치 실제 데이터 · 성능 시뮬레이션</div>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="라이트/다크" aria-label="테마 전환">🌙</button>
+  </div>
 </div>
 
 <div class="main">
@@ -235,8 +277,37 @@ body { font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif; backgroun
 </div>
 
 <script>
-let DATA = null, map = null;
+let DATA = null, map = null, tileLayer = null;
 let markers = [], clusterCircles = [];
+
+// ─── 테마(라이트/다크) ───────────────────────────────────────────────
+const TILE = {
+  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  dark:  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+};
+function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+function cssvar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+// 마커·범례 색은 토큰에서 읽어 테마에 자동 연동
+function palette() {
+  return {
+    alert: cssvar('--alert'), warn: cssvar('--warn'), brand: cssvar('--brand'),
+    kt: cssvar('--kt'), lgu: cssvar('--lgu'),
+    muted: cssvar('--line-2'), cluster: cssvar('--line-2'), stroke: cssvar('--panel'),
+  };
+}
+function setTiles() {
+  const url = isDark() ? TILE.dark : TILE.light;
+  if (tileLayer) map.removeLayer(tileLayer);
+  tileLayer = L.tileLayer(url, { attribution: '© OpenStreetMap © CartoDB', maxZoom: 18 }).addTo(map);
+  tileLayer.bringToBack();
+}
+function toggleTheme() {
+  const html = document.documentElement;
+  html.setAttribute('data-theme', isDark() ? 'light' : 'dark');
+  document.getElementById('themeToggle').textContent = isDark() ? '☀️' : '🌙';
+  setTiles();
+  if (DATA) { renderMap(); renderLegend(); }
+}
 let currentTab = 'urgent', currentMapView = 'all';
 let showKT = true, showLGU = true;   // 경쟁사 마커 표시 토글
 let selectedStoreId = null;
@@ -256,9 +327,7 @@ function dedupeStores(stores) {
 
 async function init() {
   map = L.map('map', { zoomControl: true }).setView([37.5665, 126.9780], 11);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap © CartoDB', maxZoom: 18
-  }).addTo(map);
+  setTiles();
 
   try {
     // no-cache: 서버에 항상 재검증 요청 → 데이터 갱신 시 옛 캐시로 인한 불일치(예: verdict 라벨 변경) 방지
@@ -273,7 +342,7 @@ async function init() {
     renderLegend();
   } catch(e) {
     document.getElementById('storeList').innerHTML =
-      '<div style="padding:20px;color:#ef4444;font-size:13px;">simulation_results.json 로드 실패<br>python3 simulation.py 먼저 실행하세요</div>';
+      '<div style="padding:20px;color:var(--alert);font-size:13px;">simulation_results.json 로드 실패<br>python3 simulation.py 먼저 실행하세요</div>';
   }
 }
 
@@ -543,31 +612,32 @@ function renderMap() {
     (a, b) => (a.carrier === 'SKT' ? 1 : 0) - (b.carrier === 'SKT' ? 1 : 0)
   );
 
+  const P = palette();
   renderOrder.forEach(store => {
     // 경쟁사 토글이 꺼져 있으면 해당 마커는 그리지 않음
     if (store.carrier === 'KT'  && !showKT)  { store._marker = null; return; }
     if (store.carrier === 'LGU' && !showLGU) { store._marker = null; return; }
 
-    let color = '#d1d5db', radius = 5, opacity = 0.5, weight = 1, stroke = null;
+    let color = P.muted, radius = 5, opacity = 0.5, weight = 1, stroke = null;
 
-    if (store.carrier === 'KT')  { color = '#3b82f6'; }
-    else if (store.carrier === 'LGU') { color = '#10b981'; }
+    if (store.carrier === 'KT')  { color = P.kt; }
+    else if (store.carrier === 'LGU') { color = P.lgu; }
     else {
       const cand = candMap[store.store_id];
       if (currentMapView === 'all') {
-        if (urgentIds.has(store.store_id))      { color = '#E51937'; radius = 9; opacity = 1; stroke = '#fff'; weight = 2; }
-        else if (reviewIds.has(store.store_id)) { color = '#f59e0b'; radius = 7; opacity = 0.9; }
-        else                                    { color = '#E51937'; radius = 5; opacity = 0.4; }
+        if (urgentIds.has(store.store_id))      { color = P.alert; radius = 9; opacity = 1; stroke = P.stroke; weight = 2; }
+        else if (reviewIds.has(store.store_id)) { color = P.warn; radius = 7; opacity = 0.9; }
+        else                                    { color = P.alert; radius = 5; opacity = 0.4; }
       } else if (currentMapView === 'profit') {
-        color = cand?.lens_profitability ? '#E51937' : '#d1d5db';
+        color = cand?.lens_profitability ? P.alert : P.muted;
         radius = cand?.lens_profitability ? 7 : 5;
         opacity = cand?.lens_profitability ? 0.9 : 0.3;
       } else if (currentMapView === 'ms') {
-        color = cand?.lens_ms_defense ? '#7c3aed' : '#d1d5db';
+        color = cand?.lens_ms_defense ? P.brand : P.muted;
         radius = cand?.lens_ms_defense ? 7 : 5;
         opacity = cand?.lens_ms_defense ? 0.9 : 0.3;
       } else if (currentMapView === 'coverage') {
-        color = cand?.lens_coverage ? '#0891b2' : '#d1d5db';
+        color = cand?.lens_coverage ? P.lgu : P.muted;
         radius = cand?.lens_coverage ? 7 : 5;
         opacity = cand?.lens_coverage ? 0.9 : 0.3;
       }
@@ -602,7 +672,7 @@ function renderMap() {
       const avgLat = stores.reduce((a, s) => a + s.lat, 0) / stores.length;
       const avgLng = stores.reduce((a, s) => a + s.lng, 0) / stores.length;
       const c = L.circle([avgLat, avgLng], {
-        radius: 800, color: '#94a3b8', fillColor: '#94a3b8',
+        radius: 800, color: P.cluster, fillColor: P.cluster,
         fillOpacity: 0.05, weight: 1, dashArray: '4,4',
         interactive: false  // 장식용 상권 표시 — 클릭을 흡수하지 않고 아래 매장 마커로 통과시킴
       }).addTo(map);
@@ -612,30 +682,31 @@ function renderMap() {
 }
 
 function renderLegend() {
+  const P = palette();
   const legends = {
     all: `
       <div class="legend-title">판정 결과</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#E51937;width:13px;height:13px;border:2px solid #fff;box-shadow:0 0 0 1px #E51937"></div> 정리 유력</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#f59e0b"></div> 조건부 검토</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#E51937;opacity:0.4"></div> 일반 SKT 매장</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#3b82f6"></div> KT</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#10b981"></div> LGU+</div>
-      <div style="font-size:9px;color:#9ca3af;margin-top:6px;">점선 원 = 밀집 상권 (800m)</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.alert};width:13px;height:13px;border:2px solid ${P.stroke};box-shadow:0 0 0 1px ${P.alert}"></div> 정리 유력</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.warn}"></div> 조건부 검토</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.alert};opacity:0.4"></div> 일반 SKT 매장</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.kt}"></div> KT</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.lgu}"></div> LGU+</div>
+      <div style="font-size:9px;color:var(--t3);margin-top:6px;">점선 원 = 밀집 상권 (800m)</div>
     `,
     profit: `
       <div class="legend-title">수익성 미달 기준</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#E51937"></div> 적자 + 이탈 패턴</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#d1d5db"></div> 해당 없음</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.alert}"></div> 적자 + 이탈 패턴</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.muted}"></div> 해당 없음</div>
     `,
     ms: `
       <div class="legend-title">M/S 방어 가능</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#7c3aed"></div> 인근 SKT가 충분히 흡수</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#d1d5db"></div> 흡수 불충분</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.brand}"></div> 인근 SKT가 충분히 흡수</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.muted}"></div> 흡수 불충분</div>
     `,
     coverage: `
       <div class="legend-title">커버리지 여유</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#0891b2"></div> 반경 내 대체 매장 충분</div>
-      <div class="legend-row"><div class="legend-dot" style="background:#d1d5db"></div> 단독 입지</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.lgu}"></div> 반경 내 대체 매장 충분</div>
+      <div class="legend-row"><div class="legend-dot" style="background:${P.muted}"></div> 단독 입지</div>
     `,
   };
   document.getElementById('mapLegend').innerHTML = legends[currentMapView];
@@ -664,12 +735,12 @@ function showDetail(store) {
   const profit = store.monthly_profit_krw;
   const profitStr = profit != null
     ? (profit < 0
-        ? `적자 <b style="color:#E51937">월 ${Math.abs(profit/10000).toFixed(0)}만원 손실</b>`
-        : `흑자 <b style="color:#059669">월 ${(profit/10000).toFixed(0)}만원</b>`)
+        ? `적자 <b style="color:var(--alert)">월 ${Math.abs(profit/10000).toFixed(0)}만원 손실</b>`
+        : `흑자 <b style="color:var(--ok)">월 ${(profit/10000).toFixed(0)}만원</b>`)
     : '데이터 없음';
 
   const lensHtml = cand ? `
-    <div style="font-size:11px;font-weight:700;color:#9ca3af;margin-bottom:6px;">3가지 기준 판정</div>
+    <div style="font-size:11px;font-weight:700;color:var(--t3);margin-bottom:6px;">3가지 기준 판정</div>
     <div class="lens-check-row ${cand.lens_profitability ? 'pass' : 'fail'}">
       <div class="lens-icon">${cand.lens_profitability ? '✅' : '⬜'}</div>
       <div>
@@ -691,19 +762,19 @@ function showDetail(store) {
         <div class="lens-desc">같은 밀집 상권 내 SKT 매장 ${store.dbscan_cluster_size || 0}개</div>
       </div>
     </div>
-  ` : '<div style="font-size:12px;color:#9ca3af;padding:8px 0">3개 기준 모두 미해당 — 유지 권고</div>';
+  ` : '<div style="font-size:12px;color:var(--t3);padding:8px 0">3개 기준 모두 미해당 — 유지 권고</div>';
 
   let huffHtml = '';
   if (cand?.huff_redistribution?.length) {
     huffHtml = `
-      <div style="font-size:11px;font-weight:700;color:#9ca3af;margin:10px 0 6px">폐점 시 고객 이동 예상</div>
-      <div style="font-size:10px;color:#9ca3af;margin-bottom:6px">25% 이탈 추정 (${cand.huff_lost_subs}건) · 나머지는 아래 매장으로</div>
+      <div style="font-size:11px;font-weight:700;color:var(--t3);margin:10px 0 6px">폐점 시 고객 이동 예상</div>
+      <div style="font-size:10px;color:var(--t3);margin-bottom:6px">25% 이탈 추정 (${cand.huff_lost_subs}건) · 나머지는 아래 매장으로</div>
       <table class="huff-table">
         ${[...cand.huff_redistribution].sort((a,b) => a.distance_km - b.distance_km).map(h => `
           <tr>
-            <td style="color:#374151">${h.store_name}</td>
-            <td style="color:#9ca3af;text-align:right">${h.distance_km}km</td>
-            <td style="color:#059669;font-weight:700;text-align:right">+${h.absorbed_subs}건</td>
+            <td style="color:var(--t1)">${h.store_name}</td>
+            <td style="color:var(--t3);text-align:right">${h.distance_km}km</td>
+            <td style="color:var(--ok);font-weight:700;text-align:right">+${h.absorbed_subs}건</td>
           </tr>
         `).join('')}
       </table>
