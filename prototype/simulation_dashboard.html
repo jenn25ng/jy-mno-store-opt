@@ -78,8 +78,10 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--t0);
 .kpi-cell:hover { background: var(--warm); }
 .kpi-cell.active { background: var(--brand-soft); box-shadow: inset 0 -2px 0 var(--brand); }
 .kpi-num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 20px; font-weight: 700; letter-spacing: -.5px; color: var(--t1); }
-.kpi-num.danger { color: var(--alert); }
+.kpi-num.danger { color: var(--alert); font-size: 23px; }  /* 핵심 지표 — 더 도드라지게 */
 .kpi-num.warn { color: var(--warn); }
+.kpi-num.total { color: var(--t0); }    /* 전체 = 기준값(진하게) */
+.kpi-num.muted { color: var(--t3); }    /* 관찰 = 비강조(물러남) */
 .kpi-num.neutral { color: var(--t1); }
 .kpi-label { font-size: 10px; color: var(--t3); margin-top: 3px; }
 
@@ -136,6 +138,20 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--t0);
 .metric-val.neg { color: var(--alert); }
 .metric-val.pos { color: var(--ok); }
 .metric-label { font-size: 9px; color: var(--t3); margin-top: 1px; }
+
+/* 정리 적합도 — 3개 룰 종합 우선순위 (막대 길이=강도, 문제일수록 뜨겁게) */
+.priority { margin: 9px 0; }
+.priority-head { display: flex; align-items: baseline; gap: 6px; margin-bottom: 5px; }
+.priority-score { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 16px; font-weight: 700; line-height: 1; color: var(--t2); }
+.priority-label { font-size: 10px; color: var(--t3); }
+.priority-track { height: 6px; border-radius: 999px; background: var(--warm); overflow: hidden; }
+.priority-fill { height: 100%; border-radius: 999px; background: var(--line-2); transition: width .3s; }
+.priority.urgent .priority-score { color: var(--alert); }
+.priority.urgent .priority-fill  { background: var(--alert); }
+.priority.review .priority-score { color: var(--warn); }
+.priority.review .priority-fill  { background: var(--warn); }
+.priority.watch  .priority-score { color: var(--t2); }
+.priority.watch  .priority-fill  { background: var(--line-2); }
 
 /* MINI CARD */
 .mini-card {
@@ -241,6 +257,7 @@ body { font-family: var(--font-body); background: var(--bg); color: var(--t0);
     <div class="kpi-strip" id="kpiStrip"></div>
     <div class="list-controls">
       <select class="ctrl-sort" id="sortSelect" onchange="setSort(this.value)" title="정렬 기준">
+        <option value="priority_desc">정리 적합도 — 높은 순</option>
         <option value="profit_asc">월손익 — 적자 큰 순</option>
         <option value="subs_desc">월순증 — 많은 순</option>
         <option value="subs_asc">월순증 — 적은 순</option>
@@ -311,7 +328,7 @@ function toggleTheme() {
 let currentTab = 'urgent', currentMapView = 'all';
 let showKT = true, showLGU = true;   // 경쟁사 마커 표시 토글
 let selectedStoreId = null;
-let currentSort = 'profit_asc';
+let currentSort = 'priority_desc';
 let currentSido = '', currentGu = '', currentDong = '';
 let candById = {}, storeById = {};
 
@@ -350,10 +367,10 @@ function renderKPIs() {
   const s = DATA.summary;
   const vc = s.verdict_counts || {};
   const cells = [
-    { tab: 'all',     num: s.total_skt,             cls: 'neutral', label: '전체 매장' },
-    { tab: 'urgent',  num: vc['정리 유력'] || 0,    cls: 'danger',  label: '정리 유력' },
-    { tab: 'review',  num: vc['조건부 검토'] || 0,  cls: 'warn',    label: '조건부 검토' },
-    { tab: 'observe', num: vc['관찰'] || 0,         cls: 'neutral', label: '관찰' },
+    { tab: 'all',     num: s.total_skt,             cls: 'total',  label: '전체 매장' },
+    { tab: 'urgent',  num: vc['정리 유력'] || 0,    cls: 'danger', label: '정리 유력' },
+    { tab: 'review',  num: vc['조건부 검토'] || 0,  cls: 'warn',   label: '조건부 검토' },
+    { tab: 'observe', num: vc['관찰'] || 0,         cls: 'muted',  label: '관찰' },
   ];
   document.getElementById('kpiStrip').innerHTML = cells.map(c => `
     <div class="kpi-cell${currentTab === c.tab ? ' active' : ''}" onclick="switchTab('${c.tab}')">
@@ -471,11 +488,33 @@ function riskScore(it) {
   return c ? c.lens_passed : -1;
 }
 
+const clamp01 = x => Math.max(0, Math.min(1, x));
+// 정리 적합도(0~100): "3개 룰을 다 모았을 때 얼마나 정리해도 되는가".
+// 통과 렌즈 수(base 50%) + 신호 강도(적자·흡수·커버리지·인근, 50%)의 종합.
+function priorityScore(it) {
+  const c = (it.lens_passed != null) ? it : candById[it.store_id];
+  if (!c) return 0;
+  const deficit    = clamp01(-(c.monthly_profit_krw || 0) / 3000000);  // 월 -300만이면 만점
+  const absorption = clamp01(c.huff_absorption_rate || 0);             // M/S 흡수율
+  const coverage   = clamp01((c.dbscan_cluster_size || 0) / 8);        // 대체 매장 여유
+  const nearby     = clamp01((c.nearby_skt_count || 0) / 6);           // 인근 SKT
+  const signal = deficit * 0.35 + absorption * 0.30 + coverage * 0.20 + nearby * 0.15;
+  const base = (c.lens_passed || 0) / 3;
+  return Math.round((base * 0.5 + signal * 0.5) * 100);
+}
+
+function verdictClass(verdict) {
+  return verdict === '정리 유력' ? 'urgent'
+       : verdict === '조건부 검토' ? 'review'
+       : 'watch';
+}
+
 function sortItems(items) {
   const arr = [...items];
   const num = x => (x == null ? 0 : x);
   const ko = (a, b) => (a || '').localeCompare(b || '', 'ko');
   switch (currentSort) {
+    case 'priority_desc': arr.sort((a, b) => priorityScore(b) - priorityScore(a)); break;
     case 'profit_asc': arr.sort((a, b) => num(a.monthly_profit_krw) - num(b.monthly_profit_krw)); break;
     case 'subs_desc':  arr.sort((a, b) => num(b.monthly_subs) - num(a.monthly_subs)); break;
     case 'subs_asc':   arr.sort((a, b) => num(a.monthly_subs) - num(b.monthly_subs)); break;
@@ -543,6 +582,13 @@ function candidateCard(c) {
           <div class="card-zone">${c.zone}</div>
         </div>
         ${verdictBadge(c.verdict)}
+      </div>
+      <div class="priority ${verdictClass(c.verdict)}">
+        <div class="priority-head">
+          <span class="priority-score">${priorityScore(c)}</span>
+          <span class="priority-label">정리 적합도 · 3개 룰 종합</span>
+        </div>
+        <div class="priority-track"><div class="priority-fill" style="width:${priorityScore(c)}%"></div></div>
       </div>
       <div class="metrics">
         <div class="metric">
